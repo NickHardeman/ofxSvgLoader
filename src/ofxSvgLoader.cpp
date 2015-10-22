@@ -14,7 +14,7 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
     ofFile mainXmlFile( aPathToSvg, ofFile::ReadOnly );
     ofBuffer tMainXmlBuffer( mainXmlFile );
     
-    folderPath = ofFilePath::getEnclosingDirectory( aPathToSvg );
+    folderPath = ofFilePath::getEnclosingDirectory( aPathToSvg, false );
     
     Poco::XML::DOMParser parser;
     Poco::XML::Document* document;
