@@ -2,8 +2,8 @@
 Addon for OpenFrameworks for parsing svg files.
 Uses Libsvgtiny for parsing paths.
 
-Loads a avg file and parses it for easy navigation.<br/>
-<strong>Groups, rectangles, images, circles, ellipses and paths/lines.</strong>
+Loads a svg file and parses it for easy navigation.<br/>
+<strong>Groups, rectangles, images, circles, ellipses, text and paths/lines.</strong>
 
 Several use cases are shown in the provided example.
 
