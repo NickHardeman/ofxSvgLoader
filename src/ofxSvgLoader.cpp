@@ -8,13 +8,20 @@
 #include "svgtiny.h"
 
 //--------------------------------------------------------------
+ofxSvgLoader::ofxSvgLoader() {
+    svgPath     = "";
+    folderPath  = "";
+}
+
+//--------------------------------------------------------------
 bool ofxSvgLoader::load( string aPathToSvg ) {
     elements.clear();
     
     ofFile mainXmlFile( aPathToSvg, ofFile::ReadOnly );
     ofBuffer tMainXmlBuffer( mainXmlFile );
     
-    folderPath = ofFilePath::getEnclosingDirectory( aPathToSvg, false );
+    svgPath     = aPathToSvg;
+    folderPath  = ofFilePath::getEnclosingDirectory( aPathToSvg, false );
     
     Poco::XML::DOMParser parser;
     Poco::XML::Document* document;
@@ -59,6 +66,15 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
     }
     
     return true;
+}
+
+//--------------------------------------------------------------
+bool ofxSvgLoader::reload() {
+    if( svgPath == "" ) {
+        ofLogError("ofxSvgLoader svg path is empty, please call load with file path before calling reload");
+        return false;
+    }
+    return load( svgPath );
 }
 
 //--------------------------------------------------------------
@@ -158,6 +174,40 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
         rect->pos.y = rect->rectangle.y;
         
         parseWithSvgTiny( document, tnode, telement );
+        
+        // this shouldn't be drawn at all, may be a rect that for some reason is generated
+        // by text blocks //
+        if( !rect->isFilled() && !rect->hasStroke() ) {
+            telement.reset();
+        }
+        
+    } else if( tnode->nodeName() == "text" ) {
+        telement = shared_ptr< ofxSvgText >( new ofxSvgText() );
+        shared_ptr< ofxSvgText > text = dynamic_pointer_cast< ofxSvgText>( telement );
+//        cout << "has kids: " << tnode->hasChildNodes() << " node value: " << tnode->innerText() << endl;
+        if( tnode->hasChildNodes() ) {
+            Poco::XML::NodeList *list = tnode->childNodes();
+            for(int i=0; i < (int)list->length(); i++) {
+                if(list->item(i) && list->item(i)->nodeType() == Poco::XML::Node::ELEMENT_NODE) {
+                    Poco::XML::Element* babyNode  = (Poco::XML::Element*) list->item(i);
+                    if( babyNode->nodeName() == "tspan" ) {
+                        text->textSpans.push_back( getTextSpanFromXmlNode( babyNode ) );
+                    }
+                }
+            }
+            list->release();
+            
+            // this may not be a text block or it may have to text //
+            if( text->textSpans.size() == 0 ) {
+                if( tnode->hasAttribute("font-family")) {
+//                    cout << "Trying to add in a text span " << tnode->innerText() << endl;
+                    text->textSpans.push_back( getTextSpanFromXmlNode( tnode ) );
+                }
+            }
+            
+        }
+        text->fdirectory = folderPath;
+        text->create();
     } else if( tnode->nodeName() == "g" ) {
 //        if( tnode->hasChildNodes() ) {
 //            telement = shared_ptr< ofxSvgGroup >( new ofxSvgGroup() );
@@ -168,7 +218,7 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
         return;
     }
     
-    if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_RECTANGLE || telement->getType() == ofxSvgBase::OFX_SVG_TYPE_IMAGE ) {
+    if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_RECTANGLE || telement->getType() == ofxSvgBase::OFX_SVG_TYPE_IMAGE || telement->getType() == OFX_SVG_TYPE_TEXT ) {
         if( tnode->hasAttribute("transform") ) {
             getTransformFromSvgMatrix( tnode->getAttribute("transform"), telement->pos, telement->scale.x, telement->scale.y, telement->rotation );
             
@@ -234,6 +284,7 @@ void ofxSvgLoader::setupShape( struct svgtiny_shape* shape, ofPath& path ) {
 	float * p = shape->path;
     
 	path.setFilled(false);
+    path.setStrokeWidth( 0 );
     
 	if(shape->fill != svgtiny_TRANSPARENT){
 		path.setFilled(true);
@@ -308,6 +359,52 @@ bool ofxSvgLoader::getTransformFromSvgMatrix( string matrix, ofVec2f& apos, floa
         return true;
     }
     return false;
+}
+
+//--------------------------------------------------------------
+ofColor ofxSvgLoader::getColorFromXmlAttr( string aAtt ) {
+    ofStringReplace( aAtt, "#", "" );
+    aAtt = "0x"+aAtt;
+    ofColor tcolor;
+    tcolor.setHex( ofHexToInt( aAtt ) );
+    return tcolor;
+}
+
+//--------------------------------------------------------------
+ofxSvgText::TextSpan ofxSvgLoader::getTextSpanFromXmlNode( Poco::XML::Element* aNode ) {
+    ofxSvgText::TextSpan tspan;
+    
+    string tText = aNode->innerText();
+    string tFontFam = "Arial";
+    if( aNode->hasAttribute("font-family") ) {
+        tFontFam = aNode->getAttribute("font-family");
+        ofStringReplace( tFontFam, "'", "" );
+    }
+    int tFontSize = 18;
+    if( aNode->hasAttribute("font-size")) {
+        tFontSize = ofToInt( aNode->getAttribute("font-size"));
+    }
+    float tx = 0;
+    if( aNode->hasAttribute("x")) {
+        tx = ofToFloat( aNode->getAttribute("x") );
+    }
+    float ty = 0;
+    if( aNode->hasAttribute("y")) {
+        ty = ofToFloat( aNode->getAttribute("y") );
+    }
+    ofColor tcolor;
+    if( aNode->hasAttribute("fill")) {
+        tcolor = getColorFromXmlAttr( aNode->getAttribute("fill") );
+    }
+    
+    tspan.text          = tText;
+    tspan.fontFamily    = tFontFam;
+    tspan.fontSize      = tFontSize;
+    tspan.rect.x        = tx;
+    tspan.rect.y        = ty;
+    tspan.color         = tcolor;
+    
+    return tspan;
 }
 
 

@@ -6,6 +6,7 @@
 
 #pragma once
 #include "ofMain.h"
+#include <map>
 
 class ofxSvgBase {
 public:
@@ -16,37 +17,14 @@ public:
         OFX_SVG_TYPE_ELLIPSE,
         OFX_SVG_TYPE_CIRCLE,
         OFX_SVG_TYPE_PATH,
+        OFX_SVG_TYPE_TEXT,
         OFX_SVG_TYPE_TOTAL
     };
     
     ofxSvgBase() { name = "No Name"; type = OFX_SVG_TYPE_TOTAL; }
     
     int getType() {return type;}
-    string getTypeAsString() {
-        switch (type) {
-            case OFX_SVG_TYPE_GROUP:
-                return "Group";
-                break;
-            case OFX_SVG_TYPE_RECTANGLE:
-                return "Rectangle";
-                break;
-            case OFX_SVG_TYPE_IMAGE:
-                return "Image";
-                break;
-            case OFX_SVG_TYPE_ELLIPSE:
-                return "Ellipse";
-                break;
-            case OFX_SVG_TYPE_CIRCLE:
-                return "Circle";
-                break;
-            case OFX_SVG_TYPE_PATH:
-                return "Path";
-                break;
-            default:
-                break;
-        }
-        return "Unknown";
-    }
+    string getTypeAsString();
     
     string getName() { return name; }
     virtual int getNumChildren() { return 0; }
@@ -56,17 +34,7 @@ public:
     
     virtual void draw() {}
     
-    virtual string toString(int nlevel = 0) {
-        
-        string tstr = "";
-        for( int k = 0; k < nlevel; k++ ) {
-            tstr += "   ";
-        }
-        tstr += getTypeAsString() + " - " + getName() + "\n";
-        
-        return tstr;
-    }
-    
+    virtual string toString(int nlevel = 0);
     
     string name;
     int type;
@@ -90,6 +58,7 @@ public:
     
     bool isFilled() { return path.isFilled(); }
     bool hasStroke() { return path.hasOutline(); }
+    float getStrokeWidth() { return path.getStrokeWidth(); }
     ofColor getFillColor() { return path.getFillColor(); }
     ofColor getStrokeColor() { return path.getStrokeColor(); }
 };
@@ -153,6 +122,57 @@ class ofxSvgPath : public ofxSvgElement {
 public:
     ofxSvgPath() { type = OFX_SVG_TYPE_PATH; }
 };
+
+
+class ofxSvgText : public ofxSvgRectangle {
+public:
+    
+    class Font {
+    public:
+        string fontFamily;
+        map< int, ofTrueTypeFont > sizes;
+        map< int, ofTexture > textures;
+    };
+    
+    static map< string, Font > fonts;
+    
+    class TextSpan {
+    public:
+        string text;
+        int fontSize;
+        string fontFamily;
+        ofRectangle rect;
+        ofColor color;
+    };
+    
+    static bool sortSpanOnFontFamily( const TextSpan& a, const TextSpan& b ) {
+        return a.fontFamily < b.fontFamily;
+    }
+    
+    static bool sortSpanOnFontSize( const TextSpan& a, const TextSpan& b ) {
+        return a.fontSize < b.fontSize;
+    }
+    
+    ofxSvgText() { type = OFX_SVG_TYPE_TEXT; }
+    
+    void create();
+    void draw();
+    
+    map< string, map<int, ofMesh> > meshes;
+    vector< TextSpan > textSpans;
+    
+    string fdirectory;
+};
+
+
+
+
+
+
+
+
+
+
 
 
 

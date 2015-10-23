@@ -10,15 +10,17 @@
 
 class ofxSvgLoader : public ofxSvgGroup {
 public:
+    ofxSvgLoader();
     
     bool load( string aPathToSvg );
+    bool reload();
     
     virtual string toString(int nlevel = 0);
     
     bool getTransformFromSvgMatrix( string matrix, ofVec2f& apos, float & scaleX, float & scaleY, float & arotation );
     
 protected:
-    string folderPath;
+    string folderPath, svgPath;
     ofRectangle viewbox;
     ofRectangle bounds;
     string cleanString( string aStr, string aReplace );
@@ -26,6 +28,8 @@ protected:
     bool addElementFromXmlNode( Poco::XML::Document* document, Poco::XML::Element* tnode, vector< shared_ptr<ofxSvgBase> >& aElements );
     void parseWithSvgTiny( Poco::XML::Document* document, Poco::XML::Element* tnode, shared_ptr< ofxSvgElement > aElement );
     void setupShape(struct svgtiny_shape * shape, ofPath & path);
+    ofColor getColorFromXmlAttr( string aAtt );
+    ofxSvgText::TextSpan getTextSpanFromXmlNode( Poco::XML::Element* aNode );
 };
 
 
