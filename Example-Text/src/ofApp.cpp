@@ -12,7 +12,9 @@ void ofApp::setup() {
     // if you are using Helvetica in your svg file.
     // This will override the system Helvetica font which is most likely a ttc or dfont.
     // To check the name of the fonts that are being used, open the .svg file in a text editor and check the
-    // font-family tags. 
+    // font-family tags.
+    // If you are going to be editing the svg often and using Adobe Illustrator, you might want to save a .ai file
+    // and then export the svg because when illustrator saves the svg file and then reloads it, the text can get weird.
     
     ofSetFrameRate( 60 );
     svg.load( "sample.svg" );
