@@ -8,7 +8,8 @@ void ofApp::setup() {
     // OF uses the first instance in the file, which will probably not match the font variation used in the svg file
     // you can place a fonts folder in the same directory as the svg file you are loading.
     // Inside this folder place ttf fonts that should be used instead of the system font.
-    // For example, place a Helvetica.ttf file in the fonts folder if you are using Helvetica in your svg file.
+    // For example, place a Helvetica.ttf file in the fonts folder (make one if there is no fonts folder)
+    // if you are using Helvetica in your svg file.
     // This will override the system Helvetica font which is most likely a ttc or dfont.
     // To check the name of the fonts that are being used, open the .svg file in a text editor and check the
     // font-family tags. 
@@ -16,6 +17,7 @@ void ofApp::setup() {
     ofSetFrameRate( 60 );
     svg.load( "sample.svg" );
     cout << svg.toString();
+    ofSetWindowTitle( "openFrameworks Application" );
 }
 
 //--------------------------------------------------------------
