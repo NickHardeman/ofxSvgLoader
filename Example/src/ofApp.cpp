@@ -27,27 +27,6 @@ void ofApp::update(){
         }
     }
     
-    shared_ptr<ofxSvgGroup> cloudGroup = svg.get< ofxSvgGroup>("clouds");
-    if( cloudGroup ) {
-        for( int i = 0; i < cloudGroup->getNumChildren(); i++ ) {
-            shared_ptr< ofxSvgCircle > tc = cloudGroup->get< ofxSvgCircle >(i);
-            vector< ofPolyline >& polylines = tc->path.getOutline();
-            for( int k = 0; k < polylines.size(); k++ ) {
-                vector< ofPoint >& verts = polylines[k].getVertices();
-                for( int j = 0; j < polylines[k].size(); j++ ) {
-                    verts[j].x += cos( (ofGetElapsedTimef() + i + 1) * 0.9  );
-                    verts[j].y += sin( ( ofGetElapsedTimef() + i+ 1) * 4.3  );
-                }
-            }
-            ofMesh& tmesh = tc->path.getTessellation();
-            vector< ofPoint >& mverts = tmesh.getVertices();
-            for( int j = 0; j < mverts.size(); j++ ) {
-                mverts[j].x += cos( (ofGetElapsedTimef() + i + 0.8 ) * 0.9  );
-                mverts[j].y += sin( ( ofGetElapsedTimef() + i + 0.8) * 4.3  );
-            }
-        }
-    }
-    
     vector< shared_ptr<ofxSvgImage> > trees = svg.getElementsForType< ofxSvgImage>("trees");
     float mouseX = ofGetMouseX();
     
@@ -75,7 +54,7 @@ void ofApp::draw(){
         tpos.y = sin( tangle ) * (maxRadius-tradius);
         
         ofSetColor( 255, 150 );
-        ofCircle( tpos + of_circle->pos, tradius );
+        ofDrawCircle( tpos + of_circle->pos, tradius );
     }
     
     shared_ptr< ofxSvgRectangle > of_rect = svg.get< ofxSvgRectangle >("logo:ofF");
@@ -83,7 +62,7 @@ void ofApp::draw(){
         float tangle = ofGetElapsedTimef() * 1.6;
         float th = ofMap(sin( tangle ), -0.8, 1, 0, 20, true );
         float ty = ofMap(sin( tangle ), -1, 1, of_rect->pos.y, of_rect->pos.y+of_rect->getHeightScaled()-th, true );
-        ofRect(of_rect->pos.x, ty, of_rect->getWidthScaled(), th );
+        ofDrawRectangle(of_rect->pos.x, ty, of_rect->getWidthScaled(), th );
     }
     
     // draw the trees again so the circle drawn above appears behind them //

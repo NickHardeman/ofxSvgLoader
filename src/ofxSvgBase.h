@@ -81,7 +81,7 @@ public:
     
     virtual void draw() {
         if( !bTryLoad ) {
-            img.loadImage( getFilePath() );
+            img.load( getFilePath() );
             bTryLoad = true;
         }
         if( img.isAllocated() ) {

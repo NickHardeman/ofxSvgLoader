@@ -106,8 +106,6 @@ void ofxSvgText::create() {
             vector<TextSpan>& spanSpans = vIt->second;
             bool bFontLoadOk = true;
             if( tfont.sizes.count( vIt->first ) == 0 ) {
-                ofTrueTypeFont datFontTho;
-//                bFontLoadOk = datFontTho.loadFont( tfont.fontFamily, vIt->first );
 //                string _filename, int _fontSize, bool _bAntiAliased, bool _bFullCharacterSet, bool _makeContours, float _simplifyAmt, int _dpi
                 // first let's see if the fonts are provided. Some system fonts are .dfont that have several of the faces
                 // in them, but OF isn't setup to parse them, so we need each bold, regular, italic, etc to be a .ttf font //
@@ -126,11 +124,11 @@ void ofxSvgText::create() {
                     }
                 }
                 
-                bFontLoadOk = datFontTho.loadFont( tfontPath, vIt->first, true, false, false, 0.5, 72 );
+                bFontLoadOk = tfont.sizes[ vIt->first ].load( tfontPath, vIt->first, true, false, false, 0.5, 72 );
                 if(bFontLoadOk) {
-                    datFontTho.setSpaceSize( 0.57 );
-                    tfont.sizes[ vIt->first ]       = datFontTho;
-                    tfont.textures[ vIt->first ]    = datFontTho.getFontTexture();
+                    tfont.sizes[ vIt->first ].setSpaceSize( 0.57 );
+//                    tfont.sizes[ vIt->first ]       = datFontTho;
+                    tfont.textures[ vIt->first ]    = tfont.sizes[ vIt->first ].getFontTexture();
                 } else {
                     ofLogError("ofxSvgLoader - error loading font family: ") << tfont.fontFamily << " size: " << vIt->first;
                 }
@@ -142,16 +140,22 @@ void ofxSvgText::create() {
             }
             ofMesh& tmesh = meshMap[ vIt->first ];
             
+            if( !tfont.sizes.count( vIt->first ) ) {
+                ofLogError("ofxSvgLoader - ") << "Could not find that font size in the map: " << vIt->first << endl;
+                continue;
+            }
+            
             ofTrueTypeFont& ttfont = tfont.sizes[ vIt->first ];
             for( int i = 0; i < spanSpans.size(); i++ ) {
                 // create a mesh here //
                 TextSpan& cspan = spanSpans[i];
 //                cout << "font family: " << cspan.fontFamily << " size: " << cspan.fontSize << " text: " << cspan.text << endl;
                 
-                ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, cspan.rect.x, cspan.rect.y );
+//                const ofMesh& stringMesh  = ttfont.getStringMesh( "please work", 20, 20 );
+                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, cspan.rect.x, cspan.rect.y );
                 int offsetIndex     = tmesh.getNumVertices();
                 
-                vector<ofIndexType>& tsIndices = stringMesh.getIndices();
+                vector<ofIndexType> tsIndices = stringMesh.getIndices();
                 for( int k = 0; k < tsIndices.size(); k++ ) {
                     tsIndices[k] = tsIndices[k] + offsetIndex;
                 }

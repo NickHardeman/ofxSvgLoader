@@ -27,7 +27,7 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
     Poco::XML::Document* document;
     
     try {
-        document = parser.parseMemory( tMainXmlBuffer.getBinaryBuffer(), tMainXmlBuffer.size() );
+        document = parser.parseMemory( tMainXmlBuffer.getData(), tMainXmlBuffer.size() );
         document->normalize();
     } catch( exception e ) {
         short msg = atoi(e.what());
