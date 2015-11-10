@@ -2,6 +2,9 @@
 Addon for OpenFrameworks for parsing svg files.
 Uses Libsvgtiny for parsing paths.
 
+Current version compatible with OpenFrameworks 09.
+OF 0.7->0.8.4: https://github.com/NickHardeman/ofxSvgLoader/releases/tag/1.0
+
 Loads a svg file and parses it for easy navigation.<br/>
 <strong>Groups, rectangles, images, circles, ellipses, text and paths/lines.</strong>
 
