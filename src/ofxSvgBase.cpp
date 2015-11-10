@@ -126,7 +126,7 @@ void ofxSvgText::create() {
                 
                 bFontLoadOk = tfont.sizes[ vIt->first ].load( tfontPath, vIt->first, true, false, false, 0.5, 72 );
                 if(bFontLoadOk) {
-                    tfont.sizes[ vIt->first ].setSpaceSize( 0.57 );
+//                    tfont.sizes[ vIt->first ].setSpaceSize( 0.57 );
 //                    tfont.sizes[ vIt->first ]       = datFontTho;
                     tfont.textures[ vIt->first ]    = tfont.sizes[ vIt->first ].getFontTexture();
                 } else {

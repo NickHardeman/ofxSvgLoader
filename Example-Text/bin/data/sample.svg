@@ -42,18 +42,39 @@
 	<text transform="matrix(1 0 0 1 541.8818 733.7441)" fill="#494949" font-family="'ArialMT'" font-size="21">one framework to another.</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 541.8906 44.5137)" fill="#494949" font-family="'Arial-BoldMT'" font-size="36">SIMPLICITY</text>
+	<text transform="matrix(1 0 0 1 542 44.8848)" fill="#494949" font-family="'Arial-BoldMT'" font-size="36">SIMPLICITY</text>
 </g>
-<text transform="matrix(1 0 0 1 53.5 44.5137)" fill="#494949" font-family="'Verdana-Bold'" font-size="36">OPENFRAMEWORKS</text>
+<text transform="matrix(1 0 0 1 52 45.0869)" fill="#494949" font-family="'Verdana-Bold'" font-size="36">OPENFRAMEWORKS</text>
 <g id="logo">
 	<circle id="ofO" fill="#CD0FEF" cx="100.348" cy="692.175" r="46.848"/>
-	<rect id="ofF" x="152.247" y="645.431" fill="#CD0FEF" width="41.13" height="93.594"/>
+	<rect id="ofF" x="152.247" y="645.431" fill="#CD0FEF" width="41.13" height="93.595"/>
 	<polygon fill="#CD0FEF" points="197.994,645.416 197.994,682.078 235.047,645.221 	"/>
 	<rect x="197.994" y="686.141" fill="#CD0FEF" width="24.552" height="26.651"/>
 </g>
 <rect x="57.546" y="61.845" fill="none" width="431.954" height="560.655"/>
 <g>
 	<rect x="57.546" y="67.145" fill="none" width="431.954" height="560.355"/>
-	<text transform="matrix(1 0 0 1 57.5459 83.1045)"><tspan x="0" y="0" fill="#494949" font-family="'Verdana'" font-size="21">The code is written to be massively </tspan><tspan x="0" y="25.2" fill="#494949" font-family="'Verdana'" font-size="21">cross-compatible. Right now we support </tspan><tspan x="0" y="50.4" fill="#494949" font-family="'Verdana'" font-size="21">five operating systems (Windows, OSX, </tspan><tspan x="0" y="75.6" fill="#494949" font-family="'Verdana'" font-size="21">Linux, iOS, Android) and four IDEs </tspan><tspan x="0" y="100.8" fill="#494949" font-family="'Verdana'" font-size="21">(XCode, Code::Blocks, and Visual Studio </tspan><tspan x="0" y="126" fill="#494949" font-family="'Verdana'" font-size="21">and Eclipse). The API is designed to be </tspan><tspan x="0" y="151.2" fill="#494949" font-family="'Verdana'" font-size="21">minimal and easy to grasp.</tspan><tspan x="0" y="201.6" fill="#CD0FEF" font-family="'Verdana'" font-size="21">openFrameworks </tspan><tspan x="187.852" y="201.6" fill="#494949" font-family="'Verdana'" font-size="21">is distributed under </tspan><tspan x="0" y="226.8" fill="#494949" font-family="'Verdana'" font-size="21">the MIT License. This gives everyone </tspan><tspan x="0" y="252" fill="#494949" font-family="'Verdana'" font-size="21">the freedoms to use openFrameworks in </tspan><tspan x="0" y="277.2" fill="#494949" font-family="'Verdana'" font-size="21">any context: commercial or non-</tspan><tspan x="0" y="302.399" fill="#494949" font-family="'Verdana'" font-size="21">commercial, public or private, open or </tspan><tspan x="0" y="327.601" fill="#494949" font-family="'Verdana'" font-size="21">closed source. While many openFrame</tspan><tspan x="407.593" y="327.601" fill="#494949" font-family="'Verdana'" font-size="21">-</tspan><tspan x="0" y="352.8" fill="#494949" font-family="'Verdana'" font-size="21">works users give their work back to the </tspan><tspan x="0" y="378" fill="#494949" font-family="'Verdana'" font-size="21">community in a similarly free way, there </tspan><tspan x="0" y="403.2" fill="#494949" font-family="'Verdana'" font-size="21">is no obligation to contribute.</tspan><tspan x="0" y="453.6" fill="#494949" font-family="'Verdana'" font-size="21">Simply put, openFrameworks is a tool </tspan><tspan x="0" y="478.8" fill="#494949" font-family="'Verdana'" font-size="21">that makes it much easier to make </tspan><tspan x="0" y="504" fill="#494949" font-family="'Verdana'" font-size="21">things with code. We find it super </tspan><tspan x="0" y="529.2" fill="#494949" font-family="'Verdana'" font-size="21">useful, and we hope you do too.</tspan></text>
+	<text transform="matrix(1 0 0 1 57.5459 83.1045)" fill="#494949" font-family="'Verdana'" font-size="21">The code is written to be massively </text>
+	<text transform="matrix(1 0 0 1 57.5459 108.3047)" fill="#494949" font-family="'Verdana'" font-size="21">cross-compatible. Right now we support </text>
+	<text transform="matrix(1 0 0 1 57.5459 133.5049)" fill="#494949" font-family="'Verdana'" font-size="21">five operating systems (Windows, OSX, </text>
+	<text transform="matrix(1 0 0 1 57.5459 158.7041)" fill="#494949" font-family="'Verdana'" font-size="21">Linux, iOS, Android) and four IDEs </text>
+	<text transform="matrix(1 0 0 1 57.5459 183.9043)" fill="#494949" font-family="'Verdana'" font-size="21">(XCode, Code::Blocks, and Visual Studio </text>
+	<text transform="matrix(1 0 0 1 57.5459 209.1045)" fill="#494949" font-family="'Verdana'" font-size="21">and Eclipse). The API is designed to be </text>
+	<text transform="matrix(1 0 0 1 57.5459 234.3047)" fill="#494949" font-family="'Verdana'" font-size="21">minimal and easy to grasp.</text>
+	<text transform="matrix(1 0 0 1 57.5459 284.7041)" fill="#CD0FEF" font-family="'Verdana'" font-size="21">openFrameworks </text>
+	<text transform="matrix(1 0 0 1 245.3979 284.7041)" fill="#494949" font-family="'Verdana'" font-size="21">is distributed under </text>
+	<text transform="matrix(1 0 0 1 57.5459 309.9043)" fill="#494949" font-family="'Verdana'" font-size="21">the MIT License. This gives everyone </text>
+	<text transform="matrix(1 0 0 1 57.5459 335.1045)" fill="#494949" font-family="'Verdana'" font-size="21">the freedoms to use openFrameworks in </text>
+	<text transform="matrix(1 0 0 1 57.5459 360.3047)" fill="#494949" font-family="'Verdana'" font-size="21">any context: commercial or non-</text>
+	<text transform="matrix(1 0 0 1 57.5459 385.5039)" fill="#494949" font-family="'Verdana'" font-size="21">commercial, public or private, open or </text>
+	<text transform="matrix(1 0 0 1 57.5459 410.7051)" fill="#494949" font-family="'Verdana'" font-size="21">closed source. While many openFrame</text>
+	<text transform="matrix(1 0 0 1 465.1387 410.7051)" fill="#494949" font-family="'Verdana'" font-size="21">-</text>
+	<text transform="matrix(1 0 0 1 57.5459 435.9043)" fill="#494949" font-family="'Verdana'" font-size="21">works users give their work back to the </text>
+	<text transform="matrix(1 0 0 1 57.5459 461.1045)" fill="#494949" font-family="'Verdana'" font-size="21">community in a similarly free way, there </text>
+	<text transform="matrix(1 0 0 1 57.5459 486.3047)" fill="#494949" font-family="'Verdana'" font-size="21">is no obligation to contribute.</text>
+	<text transform="matrix(1 0 0 1 57.5459 536.7041)" fill="#494949" font-family="'Verdana'" font-size="21">Simply put, openFrameworks is a tool </text>
+	<text transform="matrix(1 0 0 1 57.5459 561.9043)" fill="#494949" font-family="'Verdana'" font-size="21">that makes it much easier to make </text>
+	<text transform="matrix(1 0 0 1 57.5459 587.1045)" fill="#494949" font-family="'Verdana'" font-size="21">things with code. We find it super </text>
+	<text transform="matrix(1 0 0 1 57.5459 612.3047)" fill="#494949" font-family="'Verdana'" font-size="21">useful, and we hope you do too.</text>
 </g>
 </svg>
