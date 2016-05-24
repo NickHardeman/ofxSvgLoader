@@ -317,37 +317,37 @@ struct svgtiny_parse_state createStateForSvgNode( Poco::XML::Document* document,
 }
 svgtiny_code svgtiny_parsePath( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_path( path, state );
+    return svgtiny_parse_path( path, state );
 }
 
 svgtiny_code svgtiny_parseEllipse( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_ellipse( path, state );
+    return svgtiny_parse_ellipse( path, state );
 }
 
 svgtiny_code svgtiny_parseCircle( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_circle( path, state );
+    return svgtiny_parse_circle( path, state );
 }
 
 svgtiny_code svgtiny_parseRectangle( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_rect( path, state );
+    return svgtiny_parse_rect( path, state );
 }
 
 svgtiny_code svgtiny_parseLine( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_line( path, state );
+    return svgtiny_parse_line( path, state );
 }
 
 svgtiny_code svgtiny_parsePolygon( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_poly( path, state, true );
+    return svgtiny_parse_poly( path, state, true );
 }
 
 svgtiny_code svgtiny_parsePolyline( Poco::XML::Document* document, Poco::XML::Element *path, struct svgtiny_diagram* diagram ) {
     struct svgtiny_parse_state state    = createStateForSvgNode( document, diagram );
-    svgtiny_parse_poly( path, state, false );
+    return svgtiny_parse_poly( path, state, false );
 }
 
 /**

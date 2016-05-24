@@ -48,6 +48,24 @@ void ofxSvgGroup::getElementForNameRecursive( vector< string >& aNamesToFind, sh
 //                    cout << "Found--- " << aNamesToFind[0] << endl;
                 bFound = true;
             }
+            
+            if (!bFound && aElements[i]->getType() == OFX_SVG_TYPE_TEXT) {
+                
+                if (aElements[i]->getName() == "No Name") {
+                    // the ids for text block in illustrator are weird,
+                    // so try to grab the name from the text contents //
+                    shared_ptr<ofxSvgText> etext = dynamic_pointer_cast<ofxSvgText>(aElements[i]);
+                    if (etext) {
+                        if (etext->textSpans.size()) {
+                            cout << "Searching for " << aNamesToFind[0] << " in " << etext->textSpans.front().text << endl;
+                            if(ofIsStringInString( etext->textSpans.front().text, aNamesToFind[0] )) {
+                                bFound = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
         
         if( bFound == true ) {

@@ -21,7 +21,7 @@ public:
         OFX_SVG_TYPE_TOTAL
     };
     
-    ofxSvgBase() { name = "No Name"; type = OFX_SVG_TYPE_TOTAL; }
+    ofxSvgBase() { name = "No Name"; type = OFX_SVG_TYPE_TOTAL; setVisible( true ); }
     
     int getType() {return type;}
     string getTypeAsString();
@@ -32,13 +32,17 @@ public:
         return (getType() == OFX_SVG_TYPE_GROUP);
     }
     
+    void setVisible( bool ab ) { bVisible = ab; }
+    bool isVisible() { return bVisible; }
+    
     virtual void draw() {}
     
     virtual string toString(int nlevel = 0);
     
     string name;
     int type;
-    
+    bool bVisible;
+    ofVec2f pos;
 };
 
 class ofxSvgElement : public ofxSvgBase {
@@ -47,13 +51,12 @@ public:
     ofxSvgElement() {scale.set(1,1); rotation = 0.0;}
     
     ofVec2f scale;
-    ofVec2f pos;
     float rotation;
     
     ofPath path;
     
     virtual void draw() {
-        path.draw();
+        if(isVisible()) path.draw();
     }
     
     bool isFilled() { return path.isFilled(); }
@@ -84,19 +87,30 @@ public:
             img.load( getFilePath() );
             bTryLoad = true;
         }
-        if( img.isAllocated() ) {
-            ofPushMatrix(); {
-                ofTranslate( pos.x, pos.y );
-                if( rotation > 0 ) ofRotateZ( rotation );
-                ofScale( scale.x, scale.y );
-                ofSetColor( 255, 255, 255, 255 );
-                img.draw( 0, 0 );
-            } ofPopMatrix();
+        
+        if( isVisible() ) {
+            if( img.isAllocated() ) {
+                ofPushMatrix(); {
+                    ofTranslate( pos.x, pos.y );
+                    if( rotation > 0 ) ofRotateZ( rotation );
+                    ofScale( scale.x, scale.y );
+                    ofSetColor( getColor() );
+                    img.draw( 0, 0 );
+                } ofPopMatrix();
+            }
         }
     }
     
     string getFilePath() { return filepath; }
     
+    void setColor( ofColor aColor ) {
+        color = aColor;
+    }
+    ofColor getColor() {
+        return color;
+    }
+    
+    ofColor color;
     ofImage img;
     bool bTryLoad;
     string filepath;
@@ -138,11 +152,19 @@ public:
     
     class TextSpan {
     public:
+        TextSpan() {
+            text = "";
+            fontSize = 12;
+            lineHeight = 0;
+        }
+        
         string text;
         int fontSize;
         string fontFamily;
         ofRectangle rect;
         ofColor color;
+        float lineHeight;
+        ofTrueTypeFont& getFont();
     };
     
     static bool sortSpanOnFontFamily( const TextSpan& a, const TextSpan& b ) {
@@ -153,15 +175,36 @@ public:
         return a.fontSize < b.fontSize;
     }
     
-    ofxSvgText() { type = OFX_SVG_TYPE_TEXT; }
+    ofxSvgText() { type = OFX_SVG_TYPE_TEXT; fdirectory=""; bCentered=false; alpha=1.0; bOverrideColor=false; }
     
     void create();
     void draw();
+    
+    void setFontDirectory( string aPath ) {
+        fdirectory = aPath;
+		cout << "Setting the font directory to " << fdirectory << endl;
+    }
+    
+    void overrideColor( ofColor aColor ) {
+        bOverrideColor = true;
+        _overrideColor = aColor;
+    }
+    
+    ofRectangle getRectangle();
     
     map< string, map<int, ofMesh> > meshes;
     vector< TextSpan > textSpans;
     
     string fdirectory;
+    bool bCentered;
+    float alpha;
+    ofVec2f ogPos;
+    
+protected:
+    static ofTrueTypeFont defaultFont;
+	bool _recursiveFontDirSearch(string afile, string aFontFamToLookFor, string& fontpath);
+    ofFloatColor _overrideColor;
+    bool bOverrideColor;
 };
 
 

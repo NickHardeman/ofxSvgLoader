@@ -7,6 +7,7 @@
 #include "ofxSvgBase.h"
 
 map< string, ofxSvgText::Font > ofxSvgText::fonts;
+ofTrueTypeFont ofxSvgText::defaultFont;
 
 #pragma mark - ofxSvgBase
 //--------------------------------------------------------------
@@ -55,6 +56,8 @@ string ofxSvgBase::toString( int nlevel ) {
 
 //--------------------------------------------------------------
 void ofxSvgText::create() {
+    meshes.clear();
+    
     // now lets sort the text based on meshes that we need to create //
     vector< TextSpan > tspans = textSpans;
     
@@ -77,7 +80,7 @@ void ofxSvgText::create() {
 //    cout << "checking directory: " << fdirectory+"/fonts/" << endl;
     string fontsDirectory = "fonts/";
     if( fdirectory != "" ) {
-        fontsDirectory = fdirectory+"/fonts/";
+        fontsDirectory = fdirectory;//+"/fonts/";
     }
     if( ofFile::doesFileExist( fontsDirectory )) {
         bHasFontDirectory = true;
@@ -105,32 +108,51 @@ void ofxSvgText::create() {
         for( vIt = mainIt->second.begin(); vIt != mainIt->second.end(); ++vIt ) {
             vector<TextSpan>& spanSpans = vIt->second;
             bool bFontLoadOk = true;
-            if( tfont.sizes.count( vIt->first ) == 0 ) {
+			if (tfont.sizes.count(vIt->first) == 0) {
 //                string _filename, int _fontSize, bool _bAntiAliased, bool _bFullCharacterSet, bool _makeContours, float _simplifyAmt, int _dpi
                 // first let's see if the fonts are provided. Some system fonts are .dfont that have several of the faces
                 // in them, but OF isn't setup to parse them, so we need each bold, regular, italic, etc to be a .ttf font //
-                string tfontPath = tfont.fontFamily;
-                if( bHasFontDirectory ) {
-                    ofDirectory tfDir;
-                    tfDir.listDir( fontsDirectory );
-                    for( int ff = 0; ff < tfDir.size(); ff++ ) {
-                        ofFile tfFile = tfDir.getFile(ff);
-                        if( tfFile.getExtension() == "ttf" || tfFile.getExtension() == "otf" ) {
-                            if( ofToLower(tfFile.getBaseName()) == ofToLower(tfont.fontFamily) ) {
-                                ofLogNotice("ofxSvgText found font file for " ) << tfont.fontFamily;
-                                tfontPath = tfFile.getAbsolutePath();
-                            }
-                        }
-                    }
-                }
-                
-                bFontLoadOk = tfont.sizes[ vIt->first ].load( tfontPath, vIt->first, true, false, false, 0.5, 72 );
+				string tfontPath = tfont.fontFamily;
+				if (bHasFontDirectory) {
+
+					cout << "ofxSvgBase :: starting off searching directory : " << fontsDirectory << endl;
+					string tNewFontPath = "";
+					bool bFoundTheFont = _recursiveFontDirSearch(fontsDirectory, tfont.fontFamily, tNewFontPath);
+					if (bFoundTheFont) {
+						tfontPath = tNewFontPath;
+					}
+
+					/*ofDirectory tfDir;
+					tfDir.listDir( fontsDirectory );
+					for( int ff = 0; ff < tfDir.size(); ff++ ) {
+						ofFile tfFile = tfDir.getFile(ff);
+						if( tfFile.getExtension() == "ttf" || tfFile.getExtension() == "otf" ) {
+							cout << ff << " - font family: " << tfont.fontFamily << " file name: " << tfFile.getBaseName() << endl;
+							if( ofToLower(tfFile.getBaseName()) == ofToLower(tfont.fontFamily) ) {
+								ofLogNotice(" >> ofxSvgText found font file for " ) << tfont.fontFamily;
+								tfontPath = tfFile.getAbsolutePath();
+								break;
+							}
+						}
+					}*/
+				}
+
+				//cout << "Trying to load font from: " << tfontPath << endl;
+
+				if (tfontPath == "") {
+					bFontLoadOk = false;
+				}
+				else {
+                    // load(const std::string& _filename, int _fontSize, bool _bAntiAliased, bool _bFullCharacterSet, bool _makeContours, float _simplifyAmt, int _dpi)
+					bFontLoadOk = tfont.sizes[vIt->first].load(tfontPath, vIt->first, true, true, false, 0.5, 72);
+				}
                 if(bFontLoadOk) {
 //                    tfont.sizes[ vIt->first ].setSpaceSize( 0.57 );
 //                    tfont.sizes[ vIt->first ]       = datFontTho;
                     tfont.textures[ vIt->first ]    = tfont.sizes[ vIt->first ].getFontTexture();
                 } else {
                     ofLogError("ofxSvgLoader - error loading font family: ") << tfont.fontFamily << " size: " << vIt->first;
+					tfont.sizes.erase(vIt->first);
                 }
             }
             if( !bFontLoadOk ) continue;
@@ -149,10 +171,14 @@ void ofxSvgText::create() {
             for( int i = 0; i < spanSpans.size(); i++ ) {
                 // create a mesh here //
                 TextSpan& cspan = spanSpans[i];
+                if( cspan.text == "" ) continue;
 //                cout << "font family: " << cspan.fontFamily << " size: " << cspan.fontSize << " text: " << cspan.text << endl;
                 
 //                const ofMesh& stringMesh  = ttfont.getStringMesh( "please work", 20, 20 );
-                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, cspan.rect.x, cspan.rect.y );
+                
+                ofRectangle tempBounds = ttfont.getStringBoundingBox( cspan.text, 0, 0 );
+                float tffontx = bCentered ? cspan.rect.x - tempBounds.width/2 : cspan.rect.x;
+                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, tffontx-ogPos.x, cspan.rect.y-ogPos.y );
                 int offsetIndex     = tmesh.getNumVertices();
                 
                 vector<ofIndexType> tsIndices = stringMesh.getIndices();
@@ -171,12 +197,28 @@ void ofxSvgText::create() {
             }
         }
     }
+    
+    // now loop through and set the width and height of the text spans //
+    for( int i = 0; i < textSpans.size(); i++ ) {
+        TextSpan& tempSpan = textSpans[i];
+        ofTrueTypeFont& tfont = tempSpan.getFont();
+        if( tfont.isLoaded() ) {
+            ofRectangle tempBounds  = tfont.getStringBoundingBox( tempSpan.text, 0, 0 );
+            tempSpan.rect.width     = tempBounds.width;
+            tempSpan.rect.height    = tempBounds.height;
+            tempSpan.lineHeight     = tfont.getStringBoundingBox("M", 0, 0).height;
+//            tempSpan.rect.x         = tempSpan.rect.x - ogPos.x;
+//            tempSpan.rect.y         = tempSpan.rect.x - ogPos.x;
+            //tempSpan.rect.y         -= tempSpan.lineHeight;
+        }
+    }
 }
 
 //--------------------------------------------------------------
 void ofxSvgText::draw() {
+    if( !isVisible() ) return;
 //    map< string, map<int, ofMesh> > meshes;
-    ofSetColor( 255, 255, 255 );
+    ofSetColor( 255, 255, 255, 255.f * alpha );
     map< string, map<int, ofMesh> >::iterator mainIt;
     
     ofPushMatrix(); {
@@ -200,11 +242,81 @@ void ofxSvgText::draw() {
                 
                 if( bHasTexture ) tex->bind();
                 ofMesh& tMeshMesh = mIt->second;
+                vector< ofFloatColor >& tcolors = tMeshMesh.getColors();
+                for( auto& tc : tcolors ) {
+                    if( bOverrideColor ) {
+                        tc = _overrideColor;
+                    } else {
+                        tc.a = alpha;
+                    }
+                }
                 tMeshMesh.draw();
                 if( bHasTexture ) tex->unbind();
             }
         }
     } ofPopMatrix();
+    
+}
+
+//--------------------------------------------------------------
+bool ofxSvgText::_recursiveFontDirSearch(string afile, string aFontFamToLookFor, string& fontpath) {
+	if (fontpath != "") {
+		return true;
+	}
+	ofFile tfFile(afile);
+	cout << "ofxSvgText :: searching in directory : " << afile << " | " << ofGetFrameNum() << endl;
+	if (tfFile.isDirectory()) {
+		ofDirectory tdir;
+		tdir.listDir(afile);
+		for (int i = 0; i < tdir.size(); i++) {
+			_recursiveFontDirSearch(tdir.getPath(i), aFontFamToLookFor, fontpath);
+		}
+	}
+	else {
+		if (tfFile.getExtension() == "ttf" || tfFile.getExtension() == "otf") {
+			if (ofToLower(tfFile.getBaseName()) == ofToLower(aFontFamToLookFor)) {
+				ofLogNotice("ofxSvgText found font file for ") << aFontFamToLookFor;
+				fontpath = tfFile.getAbsolutePath();
+				return true;
+			}
+		}
+	}
+}
+
+// must return a reference for some reason here //
+//--------------------------------------------------------------
+ofTrueTypeFont& ofxSvgText::TextSpan::getFont() {
+    if( ofxSvgText::fonts.count( fontFamily ) ) {
+        Font& tfont = fonts[ fontFamily ];
+        if( tfont.sizes.count(fontSize) ) {
+            ofTrueTypeFont& tempFont = tfont.sizes[ fontSize ];
+            return tempFont;
+        }
+    }
+    return defaultFont;
+}
+
+// get the bounding rect for all of the text spans in this svg'ness
+// should be called after create //
+//--------------------------------------------------------------
+ofRectangle ofxSvgText::getRectangle() {
+    ofRectangle temp( 0, 0, 1, 1 );
+    for( int i = 0; i < textSpans.size(); i++ ) {
+        ofRectangle trect = textSpans[i].rect;
+        trect.x = trect.x - ogPos.x;
+        trect.y = trect.y - ogPos.y;
+        trect.y -= textSpans[i].lineHeight;
+        if( i == 0 ) {
+            temp = trect;
+        } else {
+            temp.growToInclude( trect );
+        }
+    }
+    
+    
+    temp.x += pos.x;
+    temp.y += pos.y;
+    return temp;
 }
 
 

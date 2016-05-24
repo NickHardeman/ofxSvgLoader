@@ -28,7 +28,7 @@ void ofApp::update() {
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
     svg.draw();
     ofSetColor( 255, 0, 0 );
 }

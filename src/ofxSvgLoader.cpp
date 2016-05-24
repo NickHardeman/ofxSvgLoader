@@ -133,7 +133,6 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
         shared_ptr< ofxSvgImage > image = dynamic_pointer_cast< ofxSvgImage>( telement );
         image->rectangle.width  = ofToFloat(tnode->getAttribute("width"));
         image->rectangle.height = ofToFloat(tnode->getAttribute("height"));
-        
         if( tnode->hasAttribute("xlink:href") ) {
             image->filepath = folderPath+tnode->getAttribute("xlink:href");
 //            cout << "image->path = " << image->getFilePath() << endl;
@@ -206,8 +205,15 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
             }
             
         }
-        text->fdirectory = folderPath;
-        text->create();
+        
+        string tempFolderPath = folderPath;
+        if( tempFolderPath.back() != '/' ) {
+            tempFolderPath += '/';
+        }
+        if( ofDirectory::doesDirectoryExist( tempFolderPath+"fonts/" )) {
+            text->setFontDirectory( tempFolderPath+"fonts/" );
+        }
+        
     } else if( tnode->nodeName() == "g" ) {
 //        if( tnode->hasChildNodes() ) {
 //            telement = shared_ptr< ofxSvgGroup >( new ofxSvgGroup() );
@@ -215,14 +221,24 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
     }
     
     if( !telement ) {
-        return;
+        return false;
     }
     
     if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_RECTANGLE || telement->getType() == ofxSvgBase::OFX_SVG_TYPE_IMAGE || telement->getType() == OFX_SVG_TYPE_TEXT ) {
         if( tnode->hasAttribute("transform") ) {
             getTransformFromSvgMatrix( tnode->getAttribute("transform"), telement->pos, telement->scale.x, telement->scale.y, telement->rotation );
-            
         }
+        if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_IMAGE ) {
+            shared_ptr< ofxSvgImage > timg = dynamic_pointer_cast<ofxSvgImage>( telement );
+            timg->rectangle.x = timg->pos.x;
+            timg->rectangle.y = timg->pos.y;
+        }
+    }
+    
+    if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_TEXT ) {
+        shared_ptr< ofxSvgText > text = dynamic_pointer_cast< ofxSvgText>( telement );
+        text->ogPos = text->pos;
+        text->create();
     }
     
     if( tnode->hasAttributes() ) {
@@ -395,6 +411,15 @@ ofxSvgText::TextSpan ofxSvgLoader::getTextSpanFromXmlNode( Poco::XML::Element* a
     ofColor tcolor;
     if( aNode->hasAttribute("fill")) {
         tcolor = getColorFromXmlAttr( aNode->getAttribute("fill") );
+    }
+    
+    // try to figure out the transform //
+    if( aNode->hasAttribute("transform") ) {
+        // we just need the rect.x and rect.y
+        ofVec2f tpos; float tscalex, tscaley, trotation;
+        getTransformFromSvgMatrix( aNode->getAttribute("transform"), tpos, tscalex, tscaley, trotation );
+        tx = tpos.x;
+        ty = tpos.y;
     }
     
     tspan.text          = tText;
