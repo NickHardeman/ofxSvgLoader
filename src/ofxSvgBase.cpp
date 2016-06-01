@@ -78,7 +78,7 @@ void ofxSvgText::create() {
     
     bool bHasFontDirectory = false;
 //    cout << "checking directory: " << fdirectory+"/fonts/" << endl;
-    string fontsDirectory = "fonts/";
+    string fontsDirectory = ofToDataPath("", true);
     if( fdirectory != "" ) {
         fontsDirectory = fdirectory;//+"/fonts/";
     }
@@ -264,8 +264,8 @@ bool ofxSvgText::_recursiveFontDirSearch(string afile, string aFontFamToLookFor,
 		return true;
 	}
 	ofFile tfFile( afile, ofFile::Reference );
-	cout << "ofxSvgText :: searching in directory : " << afile << " | " << ofGetFrameNum() << endl;
 	if (tfFile.isDirectory()) {
+		cout << "ofxSvgText :: searching in directory : " << afile << " | " << ofGetFrameNum() << endl;
 		ofDirectory tdir;
 		tdir.listDir(afile);
 		for (int i = 0; i < tdir.size(); i++) {
