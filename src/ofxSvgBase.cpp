@@ -137,7 +137,7 @@ void ofxSvgText::create() {
 					}*/
 				}
 
-				//cout << "Trying to load font from: " << tfontPath << endl;
+				cout << "Trying to load font from: " << tfontPath << endl;
 
 				if (tfontPath == "") {
 					bFontLoadOk = false;
@@ -263,24 +263,28 @@ bool ofxSvgText::_recursiveFontDirSearch(string afile, string aFontFamToLookFor,
 	if (fontpath != "") {
 		return true;
 	}
-	ofFile tfFile(afile);
+	ofFile tfFile( afile, ofFile::Reference );
 	cout << "ofxSvgText :: searching in directory : " << afile << " | " << ofGetFrameNum() << endl;
 	if (tfFile.isDirectory()) {
 		ofDirectory tdir;
 		tdir.listDir(afile);
 		for (int i = 0; i < tdir.size(); i++) {
-			_recursiveFontDirSearch(tdir.getPath(i), aFontFamToLookFor, fontpath);
+			bool youGoodOrWhat = _recursiveFontDirSearch(tdir.getPath(i), aFontFamToLookFor, fontpath);
+            if( youGoodOrWhat ) {
+                return true;
+            }
 		}
 	}
 	else {
-		if (tfFile.getExtension() == "ttf" || tfFile.getExtension() == "otf") {
-			if (ofToLower(tfFile.getBaseName()) == ofToLower(aFontFamToLookFor)) {
+		if ( tfFile.getExtension() == "ttf" || tfFile.getExtension() == "otf") {
+			if (ofToLower( tfFile.getBaseName() ) == ofToLower(aFontFamToLookFor)) {
 				ofLogNotice("ofxSvgText found font file for ") << aFontFamToLookFor;
 				fontpath = tfFile.getAbsolutePath();
 				return true;
 			}
 		}
 	}
+    return false;
 }
 
 // must return a reference for some reason here //

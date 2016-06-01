@@ -11,6 +11,7 @@
 ofxSvgLoader::ofxSvgLoader() {
     svgPath     = "";
     folderPath  = "";
+    fontsDirectory  = "";
 }
 
 //--------------------------------------------------------------
@@ -75,6 +76,14 @@ bool ofxSvgLoader::reload() {
         return false;
     }
     return load( svgPath );
+}
+
+//--------------------------------------------------------------
+void ofxSvgLoader::setFontsDirectory( string aDir ) {
+    fontsDirectory = aDir;
+    if( fontsDirectory.back() != '/' ) {
+        fontsDirectory += '/';
+    }
 }
 
 //--------------------------------------------------------------
@@ -212,6 +221,11 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
         }
         if( ofDirectory::doesDirectoryExist( tempFolderPath+"fonts/" )) {
             text->setFontDirectory( tempFolderPath+"fonts/" );
+        }
+        if( fontsDirectory != "" ) {
+            if( ofDirectory::doesDirectoryExist(fontsDirectory)) {
+                text->setFontDirectory( fontsDirectory );
+            }
         }
         
     } else if( tnode->nodeName() == "g" ) {

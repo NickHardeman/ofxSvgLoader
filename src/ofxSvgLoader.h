@@ -15,11 +15,14 @@ public:
     bool load( string aPathToSvg );
     bool reload();
     
+    void setFontsDirectory( string aDir );
+    
     virtual string toString(int nlevel = 0);
     
     bool getTransformFromSvgMatrix( string matrix, ofVec2f& apos, float & scaleX, float & scaleY, float & arotation );
     
 protected:
+    string fontsDirectory;
     string folderPath, svgPath;
     ofRectangle viewbox;
     ofRectangle bounds;

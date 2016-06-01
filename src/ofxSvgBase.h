@@ -182,7 +182,7 @@ public:
     
     void setFontDirectory( string aPath ) {
         fdirectory = aPath;
-		cout << "Setting the font directory to " << fdirectory << endl;
+//		cout << "Setting the font directory to " << fdirectory << endl;
     }
     
     void overrideColor( ofColor aColor ) {
