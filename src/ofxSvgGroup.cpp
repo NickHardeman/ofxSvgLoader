@@ -20,6 +20,34 @@ vector< shared_ptr<ofxSvgBase> >& ofxSvgGroup::getElements() {
 }
 
 //--------------------------------------------------------------
+vector< shared_ptr<ofxSvgBase> > ofxSvgGroup::getAllElements() {
+    vector< shared_ptr< ofxSvgBase > > retElements;
+    
+    for( auto ele : elements ) {
+        _getAllElementsRecursive( retElements, ele );
+    }
+    
+    return retElements;
+}
+
+// flattens out hierarchy //
+//--------------------------------------------------------------
+void ofxSvgGroup::_getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& aElesToReturn, shared_ptr<ofxSvgBase> aele ) {
+    
+    if( aele ) {
+        if( aele->isGroup() ) {
+            shared_ptr< ofxSvgGroup > tgroup = dynamic_pointer_cast< ofxSvgGroup >(aele);
+            for( auto ele : tgroup->getElements() ) {
+                _getAllElementsRecursive( aElesToReturn, ele );
+            }
+        } else {
+            aElesToReturn.push_back( aele );
+        }
+    }
+    
+}
+
+//--------------------------------------------------------------
 shared_ptr< ofxSvgBase > ofxSvgGroup::getElementForName( string aPath, bool bStrict ) {
     
     vector< string > tsearches;

@@ -14,7 +14,7 @@ public:
     virtual void draw();
     
     vector< shared_ptr<ofxSvgBase> >& getElements();
-    
+    vector< shared_ptr<ofxSvgBase> > getAllElements();
     
     template<typename ofxSvgType>
     vector< shared_ptr<ofxSvgType> > getElementsForType( string aPathToGroup="", bool bStrict= false ) {
@@ -69,6 +69,7 @@ public:
     
 protected:
     void getElementForNameRecursive( vector< string >& aNamesToFind, shared_ptr< ofxSvgBase >& aTarget, vector< shared_ptr<ofxSvgBase> >& aElements, bool bStrict = false );
+    void _getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& aElesToReturn, shared_ptr<ofxSvgBase> aele );
     
     vector< shared_ptr<ofxSvgBase> > elements;
 };
