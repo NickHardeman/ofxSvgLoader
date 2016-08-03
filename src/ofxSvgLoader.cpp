@@ -261,6 +261,15 @@ bool ofxSvgLoader::addElementFromXmlNode(Poco::XML::Document* document, Poco::XM
         if( atNode ) {
             telement->name = atNode->getNodeValue();
         }
+        
+        string displayPath = "[@display]";
+        Poco::XML::Node *displayNode = tnode->getNodeByPath(displayPath);
+        if( displayNode ) {
+            //            telement->name = atNode->getNodeValue();
+            if( displayNode->getNodeValue() == "none" ) {
+                telement->setVisible( false );
+            }
+        }
     }
     
 //    cout << "name: " << telement->name << " type: " << telement->getTypeAsString() << endl;
