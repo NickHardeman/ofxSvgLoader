@@ -455,8 +455,12 @@ ofxSvgText::TextSpan ofxSvgLoader::getTextSpanFromXmlNode( Poco::XML::Element* a
     return tspan;
 }
 
+//--------------------------------------------------------------
+const ofRectangle ofxSvgLoader::getBounds(){
+	return bounds;
+}
 
-
-
-
-
+//--------------------------------------------------------------
+const ofRectangle ofxSvgLoader::getViewbox(){
+	return viewbox;
+}

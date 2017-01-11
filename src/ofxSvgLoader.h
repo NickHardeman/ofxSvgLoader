@@ -20,7 +20,10 @@ public:
     virtual string toString(int nlevel = 0);
     
     bool getTransformFromSvgMatrix( string matrix, ofVec2f& apos, float & scaleX, float & scaleY, float & arotation );
-    
+	
+	const ofRectangle getBounds();
+	const ofRectangle getViewbox();
+	
 protected:
     string fontsDirectory;
     string folderPath, svgPath;
