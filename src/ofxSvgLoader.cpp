@@ -328,7 +328,7 @@ void ofxSvgLoader::setupShape( struct svgtiny_shape* shape, ofPath& path ) {
 	if(shape->fill != svgtiny_TRANSPARENT){
 		path.setFilled(true);
 		path.setFillHexColor(shape->fill);
-		path.setPolyWindingMode(OF_POLY_WINDING_NONZERO);
+//		path.setPolyWindingMode(OF_POLY_WINDING_NONZERO);
     }
     
 	if(shape->stroke != svgtiny_TRANSPARENT){
