@@ -21,4 +21,6 @@ shared_ptr<ofxSvgGroup> cloudGroup = svg.get< ofxSvgGroup>("sky:clouds");
 
 Get all of the elements of a certain type by calling getElementsForType <br/>
 vector< shared_ptr<ofxSvgImage> > trees = svg.getElementsForType< ofxSvgImage >("trees");
+  
+System fonts are supported. Also searches for a folder "fonts" in the same directory as loaded svg file for cross platform compatability.
 
