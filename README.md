@@ -4,6 +4,7 @@ Uses Libsvgtiny for parsing paths.
 
 Current version compatible with OpenFrameworks 10.<br/>
 OF 0.9->0.98 https://github.com/NickHardeman/ofxSvgLoader/releases/tag/v1.1
+
 OF 0.7->0.8.4: https://github.com/NickHardeman/ofxSvgLoader/releases/tag/1.0
 
 
