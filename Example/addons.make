@@ -1,1 +1,2 @@
+ofxSvg
 ofxSvgLoader

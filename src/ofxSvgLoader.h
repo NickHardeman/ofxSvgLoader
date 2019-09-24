@@ -30,12 +30,12 @@ protected:
     ofRectangle viewbox;
     ofRectangle bounds;
     string cleanString( string aStr, string aReplace );
-    void parseXmlNode( Poco::XML::Document* document, Poco::XML::Node* tnode, vector< shared_ptr<ofxSvgBase> >& aElements );
-    bool addElementFromXmlNode( Poco::XML::Document* document, Poco::XML::Element* tnode, vector< shared_ptr<ofxSvgBase> >& aElements );
-    void parseWithSvgTiny( Poco::XML::Document* document, Poco::XML::Element* tnode, shared_ptr< ofxSvgElement > aElement );
+    void parseXmlNode( ofXml& aRootNode, ofXml& aParentNode, vector< shared_ptr<ofxSvgBase> >& aElements );
+    bool addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector< shared_ptr<ofxSvgBase> >& aElements );
+    void parseWithSvgTiny( ofXml& aRootNode, ofXml& tnode, shared_ptr<ofxSvgElement> aElement );
     void setupShape(struct svgtiny_shape * shape, ofPath & path);
     ofColor getColorFromXmlAttr( string aAtt );
-    ofxSvgText::TextSpan getTextSpanFromXmlNode( Poco::XML::Element* aNode );
+    ofxSvgText::TextSpan getTextSpanFromXmlNode( ofXml& anode );
 };
 
 

@@ -9,8 +9,16 @@
 //--------------------------------------------------------------
 void ofxSvgGroup::draw() {
     int numElements = elements.size();
+    bool bTrans = pos.x != 0 || pos.y != 0.0;
+    if( bTrans ) {
+        ofPushMatrix();
+        ofTranslate(pos.x, pos.y);
+    }
     for( int i = 0; i < numElements; i++ ) {
         elements[i]->draw();
+    }
+    if( bTrans ) {
+        ofPopMatrix();
     }
 }
 
@@ -85,7 +93,7 @@ void ofxSvgGroup::getElementForNameRecursive( vector< string >& aNamesToFind, sh
                     shared_ptr<ofxSvgText> etext = dynamic_pointer_cast<ofxSvgText>(aElements[i]);
                     if (etext) {
                         if (etext->textSpans.size()) {
-                            cout << "Searching for " << aNamesToFind[0] << " in " << etext->textSpans.front().text << endl;
+//                            cout << "Searching for " << aNamesToFind[0] << " in " << etext->textSpans.front().text << endl;
                             if(ofIsStringInString( etext->textSpans.front().text, aNamesToFind[0] )) {
                                 bFound = true;
                             }

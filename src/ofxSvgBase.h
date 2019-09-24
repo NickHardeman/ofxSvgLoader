@@ -92,7 +92,7 @@ public:
             if( img.isAllocated() ) {
                 ofPushMatrix(); {
                     ofTranslate( pos.x, pos.y );
-                    if( rotation != 0.0 ) ofRotateZ( rotation );
+                    if( rotation != 0.0 ) ofRotateZDeg( rotation );
                     ofScale( scale.x, scale.y );
                     ofSetColor( getColor() );
                     img.draw( 0, 0 );

@@ -178,7 +178,8 @@ void ofxSvgText::create() {
                 
                 ofRectangle tempBounds = ttfont.getStringBoundingBox( cspan.text, 0, 0 );
                 float tffontx = bCentered ? cspan.rect.x - tempBounds.width/2 : cspan.rect.x;
-                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, tffontx-ogPos.x, cspan.rect.y-ogPos.y );
+//                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, tffontx-ogPos.x, cspan.rect.y-ogPos.y );
+                const ofMesh& stringMesh  = ttfont.getStringMesh( cspan.text, tffontx, cspan.rect.y );
                 int offsetIndex     = tmesh.getNumVertices();
                 
                 vector<ofIndexType> tsIndices = stringMesh.getIndices();
@@ -222,9 +223,19 @@ void ofxSvgText::draw() {
     map< string, map<int, ofMesh> >::iterator mainIt;
     
     ofPushMatrix(); {
+//        ofSetColor( 255, 0, 0 );
+//        ofDrawCircle(pos, 6);
+//        ofNoFill();
+//        ofSetColor( 0, 0, 224 );
+//        ofDrawCircle( ogPos, 10);
+//        ofDrawRectangle(getRectangle());
+//        ofFill();
+        
         ofTranslate( pos.x, pos.y );
-        if( rotation > 0 ) ofRotateZ( rotation );
-        ofTexture* tex;
+        
+//        ofSetColor( 255, 255, 255, 255.f * alpha );
+        if( rotation > 0 ) ofRotateZDeg( rotation );
+        ofTexture* tex = NULL;
         for( mainIt = meshes.begin(); mainIt != meshes.end(); ++mainIt ) {
             string fontFam = mainIt->first;
             map< int, ofMesh >::iterator mIt;
@@ -282,6 +293,13 @@ bool ofxSvgText::_recursiveFontDirSearch(string afile, string aFontFamToLookFor,
 				fontpath = tfFile.getAbsolutePath();
 				return true;
 			}
+			string tAltFileName = ofToLower(tfFile.getBaseName());
+			ofStringReplace(tAltFileName, " ", "-");
+			if (tAltFileName == ofToLower(aFontFamToLookFor)) {
+				ofLogNotice("ofxSvgText found font file for ") << aFontFamToLookFor;
+				fontpath = tfFile.getAbsolutePath();
+				return true;
+			}
 		}
 	}
     return false;
@@ -307,8 +325,8 @@ ofRectangle ofxSvgText::getRectangle() {
     ofRectangle temp( 0, 0, 1, 1 );
     for( int i = 0; i < textSpans.size(); i++ ) {
         ofRectangle trect = textSpans[i].rect;
-        trect.x = trect.x - ogPos.x;
-        trect.y = trect.y - ogPos.y;
+        trect.x = trect.x;// - ogPos.x;
+        trect.y = trect.y;// - ogPos.y;
         trect.y -= textSpans[i].lineHeight;
         if( i == 0 ) {
             temp = trect;
