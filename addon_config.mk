@@ -37,7 +37,7 @@ common:
 	
 	# any special flag that should be passed to the linker when using this
 	# addon, also used for system libraries with -lname
-	# ADDON_LDFLAGS =
+	# ADDON_LDFLAGS = 
 	
 	# linux only, any library that should be included in the project using
 	# pkg-config
@@ -87,7 +87,7 @@ android/armeabi:
 android/armeabi-v7a:	
 
 osx:
-    
+
 ios:
 
 
