@@ -1,6 +1,6 @@
 # ofxSvgLoader
 Addon for OpenFrameworks for parsing svg files.
-Uses Libsvgtiny for parsing paths.
+Uses libsvgtiny and libxml2 included in ofxSvg for parsing paths. Be sure to include ofxSvg in your project.
 
 Current version compatible with OpenFrameworks 10.<br/>
 OF 0.9->0.98 https://github.com/NickHardeman/ofxSvgLoader/releases/tag/v1.1
