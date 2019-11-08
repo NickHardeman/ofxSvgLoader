@@ -14,13 +14,13 @@ Loads a svg file and parses it for easy navigation.<br/>
 Several use cases are shown in the provided example.
 
 Grab a group by passing in the name of the group. <br/>
-shared_ptr< ofxSvgGroup > logoGroup = svg.get< ofxSvgGroup >("logo");
+`shared_ptr< ofxSvgGroup > logoGroup = svg.get< ofxSvgGroup >("logo");`
 
 Grab nested groups by passing in the hierarchy to the group separated by colons. <br/>
-shared_ptr< ofxSvgGroup > cloudGroup = svg.get< ofxSvgGroup >("sky:clouds");
+`shared_ptr< ofxSvgGroup > cloudGroup = svg.get< ofxSvgGroup >("sky:clouds");`
 
 Get all of the elements of a certain type by calling getElementsForType <br/>
-vector< shared_ptr< ofxSvgImage > > trees = svg.getElementsForType< ofxSvgImage >("trees");
+`vector< shared_ptr< ofxSvgImage > > trees = svg.getElementsForType< ofxSvgImage >("trees");`
   
 System fonts are supported. Also searches for a folder "fonts" in the same directory as loaded svg file for cross platform compatability.
 
