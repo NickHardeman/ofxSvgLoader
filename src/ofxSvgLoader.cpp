@@ -37,6 +37,9 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
 //        Poco::XML::Attr* viewBoxNode = svgNode->getAttributeNode("viewbox");
         
         ofXml svgNode = xml.getFirstChild();
+        
+        validateXmlSvgRoot( svgNode );
+        
         ofXml::Attribute viewBoxAttr = svgNode.getAttribute("viewBox");
         if(svgNode) {
             bounds.x        = ofToFloat( cleanString( svgNode.getAttribute("x").getValue(), "px") );
@@ -62,6 +65,8 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
         ofXml nxml;
         nxml.load(tMainXmlBuffer);
         ofXml cleanRootSvgNode = nxml.getFirstChild();
+        validateXmlSvgRoot( cleanRootSvgNode );
+        
         auto lchild = cleanRootSvgNode.getLastChild();
         int numTries = 0;
         while( lchild && numTries < 100000 ) {
@@ -72,52 +77,7 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
         }
         
         parseXmlNode( cleanRootSvgNode, svgNode, elements );
-        
-//        document->release();
     }
-    
-//    Poco::XML::DOMParser parser;
-//    Poco::XML::Document* document;
-//
-//    try {
-//        document = parser.parseMemory( tMainXmlBuffer.getData(), tMainXmlBuffer.size() );
-//        document->normalize();
-//    } catch( exception e ) {
-//        short msg = atoi(e.what());
-//        ofLogError() << "loadFromBuffer " << msg << endl;
-//        if( document ) {
-//            document->release();
-//        }
-//        return false;
-//    }
-    
-//
-//    if( document ) {
-//        Poco::XML::Element *svgNode     = document->documentElement();
-//
-//        Poco::XML::Attr* viewBoxNode = svgNode->getAttributeNode("viewbox");
-//
-//        bounds.x        = ofToFloat( cleanString( svgNode->getAttribute("x"), "px") );
-//        bounds.y        = ofToFloat( cleanString( svgNode->getAttribute("y"), "px" ));
-//        bounds.width    = ofToFloat( cleanString( svgNode->getAttribute("width"), "px" ));
-//        bounds.height   = ofToFloat( cleanString( svgNode->getAttribute("height"), "px" ));
-//        viewbox = bounds;
-//
-//        if( viewBoxNode ) {
-//            string tboxstr = viewBoxNode->getNodeValue();
-//            vector< string > tvals = ofSplitString( tboxstr, " " );
-//            if( tvals.size() == 4 ) {
-//                viewbox.x = ofToFloat(tvals[0] );
-//                viewbox.y = ofToFloat( tvals[1] );
-//                viewbox.width = ofToFloat( tvals[2] );
-//                viewbox.height = ofToFloat( tvals[3] );
-//            }
-//        }
-//
-//        parseXmlNode( document, svgNode, elements );
-//
-//        document->release();
-//    }
     
     return true;
 }
@@ -153,6 +113,50 @@ string ofxSvgLoader::toString(int nlevel) {
 }
 
 //--------------------------------------------------------------
+void ofxSvgLoader::validateXmlSvgRoot( ofXml& aRootSvgNode ) {
+    // if there is no width and height set in the svg base node, svg tiny no likey //
+    if(aRootSvgNode) {
+        // check for x, y, width and height //
+        {
+            auto xattr = aRootSvgNode.getAttribute("x");
+            if( !xattr ) {
+                auto nxattr = aRootSvgNode.appendAttribute("x");
+                if(nxattr) nxattr.set("0px");
+            }
+        }
+        {
+            auto yattr = aRootSvgNode.getAttribute("y");
+            if( !yattr ) {
+                auto yattr = aRootSvgNode.appendAttribute("y");
+                if( yattr ) yattr.set("0px");
+            }
+        }
+        
+        auto wattr = aRootSvgNode.getAttribute("width");
+        auto hattr = aRootSvgNode.getAttribute("height");
+        
+        if( !wattr || !hattr ) {
+            ofXml::Attribute viewBoxAttr = aRootSvgNode.getAttribute("viewBox");
+            if( viewBoxAttr ) {
+                string tboxstr = viewBoxAttr.getValue();
+                vector< string > tvals = ofSplitString( tboxstr, " " );
+                if( tvals.size() >= 4 ) {
+                    if( !wattr ) {
+                        auto nwattr = aRootSvgNode.appendAttribute("width");
+                        if(nwattr) nwattr.set( ofToString(tvals[2])+"px" );
+                    }
+                    
+                    if( !hattr ) {
+                        auto nhattr = aRootSvgNode.appendAttribute("height");
+                        if(nhattr) nhattr.set( ofToString(tvals[3])+"px" );
+                    }
+                }
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
 string ofxSvgLoader::cleanString( string aStr, string aReplace ) {
     ofStringReplace( aStr, aReplace, "");
     return aStr;
@@ -184,31 +188,6 @@ void ofxSvgLoader::parseXmlNode( ofXml& aRootNode, ofXml& aParentNode, vector< s
 //            cout << kid.getName() << " kid: " << kid.getAttribute("id").getValue() << " out xml: " << txml.toString() << endl;
         }
     }
-    
-//    if( aParentNode->hasChildNodes() ) {
-//        Poco::XML::NodeList *list = aParentNode->childNodes();
-//        for(int i=0; i < (int)list->length(); i++) {
-//            if(list->item(i) && list->item(i)->nodeType() == Poco::XML::Node::ELEMENT_NODE) {
-//                Poco::XML::Node* tnode  = (Poco::XML::Element*) list->item(i);
-//
-//                if( tnode->hasChildNodes() && tnode->nodeName() == "g" ) {
-//                    shared_ptr< ofxSvgGroup > tgroup( new ofxSvgGroup() );
-//                    aElements.push_back( tgroup );
-//                    string attributePath = "[@id]";
-//                    Poco::XML::Node *atNode = tnode->getNodeByPath(attributePath);
-//                    if( atNode ) {
-//                        tgroup->name = atNode->getNodeValue();
-//                    }
-//
-//                    parseXmlNode( document, tnode, tgroup->getElements() );
-////                    }
-//                } else {
-//                    bool bAddOk = addElementFromXmlNode( document, (Poco::XML::Element*)tnode, aElements );
-//                }
-//            }
-//        }
-//        list->release();
-//    }
 }
 
 //--------------------------------------------------------------
@@ -311,17 +290,6 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
                 }
             }
             
-//            Poco::XML::NodeList *list = tnode->childNodes();
-//            for(int i=0; i < (int)list->length(); i++) {
-//                if(list->item(i) && list->item(i)->nodeType() == Poco::XML::Node::ELEMENT_NODE) {
-//                    Poco::XML::Element* babyNode  = (Poco::XML::Element*) list->item(i);
-//                    if( babyNode->nodeName() == "tspan" ) {
-//                        text->textSpans.push_back( getTextSpanFromXmlNode( babyNode ) );
-//                    }
-//                }
-//            }
-//            list->release();
-            
             // this may not be a text block or it may have to text //
             if( text->textSpans.size() == 0 ) {
                 auto ffatrr = tnode.getAttribute("font-family");
@@ -386,23 +354,6 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
         }
     }
     
-//    if( tnode->hasAttributes() ) {
-//        string attributePath = "[@id]";
-//        Poco::XML::Node *atNode = tnode->getNodeByPath(attributePath);
-//        if( atNode ) {
-//            telement->name = atNode->getNodeValue();
-//        }
-//
-//        string displayPath = "[@display]";
-//        Poco::XML::Node *displayNode = tnode->getNodeByPath(displayPath);
-//        if( displayNode ) {
-//            //            telement->name = atNode->getNodeValue();
-//            if( displayNode->getNodeValue() == "none" ) {
-//                telement->setVisible( false );
-//            }
-//        }
-//    }
-    
 //    cout << "name: " << telement->name << " type: " << telement->getTypeAsString() << endl;
     
     
@@ -412,8 +363,6 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
 
 //--------------------------------------------------------------
 void ofxSvgLoader::parseWithSvgTiny( ofXml& aRootNode, ofXml& tnode, shared_ptr<ofxSvgElement> aElement ) {
-    
-    
     
     // make a lil xml to load for svg tiny //
     ofXml txml;// = aRootNode;
@@ -466,24 +415,6 @@ void ofxSvgLoader::parseWithSvgTiny( ofXml& aRootNode, ofXml& tnode, shared_ptr<
     }
     
     //////////////////////////////
-    
-//    if( aElement->getType() == ofxSvgBase::OFX_SVG_TYPE_PATH ) {
-//        if( tnode->nodeName() == "line" ) {
-//            svgtiny_parseLine( document, tnode, diagram );
-//        } else if( tnode->nodeName() == "path" ) {
-//            svgtiny_parsePath( document, tnode, diagram );
-//        } else if( tnode->nodeName() == "polyline" ) {
-//            svgtiny_parsePolyline( document, tnode, diagram );
-//        } else if( tnode->nodeName() == "polygon" ) {
-//            svgtiny_parsePolygon( document, tnode, diagram );
-//        }
-//    } else if( aElement->getType() == ofxSvgBase::OFX_SVG_TYPE_ELLIPSE ) {
-//        svgtiny_parseEllipse( document, tnode, diagram );
-//    } else if( aElement->getType() == ofxSvgBase::OFX_SVG_TYPE_CIRCLE ) {
-//        svgtiny_parseCircle( document, tnode, diagram );
-//    } else if( aElement->getType() == ofxSvgBase::OFX_SVG_TYPE_RECTANGLE ) {
-//        svgtiny_parseRectangle( document, tnode, diagram );
-//    }
     
     if( code == svgtiny_OK ) {
         for(int i = 0; i < (int)diagram->shape_count; i++) {

@@ -29,6 +29,7 @@ protected:
     string folderPath, svgPath;
     ofRectangle viewbox;
     ofRectangle bounds;
+    void validateXmlSvgRoot( ofXml& aRootSvgNode );
     string cleanString( string aStr, string aReplace );
     void parseXmlNode( ofXml& aRootNode, ofXml& aParentNode, vector< shared_ptr<ofxSvgBase> >& aElements );
     bool addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector< shared_ptr<ofxSvgBase> >& aElements );
