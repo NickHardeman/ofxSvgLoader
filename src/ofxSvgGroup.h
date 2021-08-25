@@ -67,6 +67,9 @@ public:
     
     int getNumChildren();
     
+    void disableColors();
+    void enableColors();
+    
 protected:
     void getElementForNameRecursive( vector< string >& aNamesToFind, shared_ptr< ofxSvgBase >& aTarget, vector< shared_ptr<ofxSvgBase> >& aElements, bool bStrict = false );
     void _getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& aElesToReturn, shared_ptr<ofxSvgBase> aele );

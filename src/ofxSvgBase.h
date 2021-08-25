@@ -35,6 +35,10 @@ public:
     void setVisible( bool ab ) { bVisible = ab; }
     bool isVisible() { return bVisible; }
     
+    virtual void setUseShapeColor( bool ab ) {
+        bUseShapeColor = ab;
+    }
+    
     virtual void draw() {}
     
     virtual string toString(int nlevel = 0);
@@ -43,6 +47,7 @@ public:
     int type;
     bool bVisible;
     ofVec2f pos;
+    bool bUseShapeColor = true;
 };
 
 class ofxSvgElement : public ofxSvgBase {
@@ -55,7 +60,7 @@ public:
     
     ofPath path;
     
-    virtual void draw() {
+    virtual void draw() override {
         if(isVisible()) path.draw();
     }
     
@@ -64,6 +69,11 @@ public:
     float getStrokeWidth() { return path.getStrokeWidth(); }
     ofColor getFillColor() { return path.getFillColor(); }
     ofColor getStrokeColor() { return path.getStrokeColor(); }
+    
+    void setUseShapeColor( bool ab ) override {
+        ofxSvgBase::setUseShapeColor(ab);
+        path.setUseShapeColor(ab);
+    }
 };
 
 class ofxSvgRectangle : public ofxSvgElement {
@@ -94,7 +104,7 @@ public:
                     ofTranslate( pos.x, pos.y );
                     if( rotation != 0.0 ) ofRotateZDeg( rotation );
                     ofScale( scale.x, scale.y );
-                    ofSetColor( getColor() );
+                    if(bUseShapeColor) ofSetColor( getColor() );
                     img.draw( 0, 0 );
                 } ofPopMatrix();
             }
@@ -112,7 +122,7 @@ public:
     
     ofColor color;
     ofImage img;
-    bool bTryLoad;
+    bool bTryLoad = false;
     string filepath;
 };
 
@@ -122,14 +132,14 @@ public:
     
     float getRadius() {return radius;}
     
-    float radius;
+    float radius = 10.0;
 };
 
 class ofxSvgEllipse : public ofxSvgElement {
 public:
     ofxSvgEllipse() { type = OFX_SVG_TYPE_ELLIPSE; }
     
-    float radiusX, radiusY;
+    float radiusX, radiusY = 10.0;
 };
 
 class ofxSvgPath : public ofxSvgElement {
@@ -159,11 +169,11 @@ public:
         }
         
         string text;
-        int fontSize;
+        int fontSize = 12;
         string fontFamily;
         ofRectangle rect;
         ofColor color;
-        float lineHeight;
+        float lineHeight = 12;
         ofTrueTypeFont& getFont();
     };
     
@@ -196,8 +206,8 @@ public:
     vector< TextSpan > textSpans;
     
     string fdirectory;
-    bool bCentered;
-    float alpha;
+    bool bCentered = false;
+    float alpha = 1.;
     ofVec2f ogPos;
     
 protected:

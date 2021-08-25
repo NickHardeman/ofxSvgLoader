@@ -219,7 +219,9 @@ void ofxSvgText::create() {
 void ofxSvgText::draw() {
     if( !isVisible() ) return;
 //    map< string, map<int, ofMesh> > meshes;
-    ofSetColor( 255, 255, 255, 255.f * alpha );
+    if(bUseShapeColor) {
+        ofSetColor( 255, 255, 255, 255.f * alpha );
+    }
     map< string, map<int, ofMesh> >::iterator mainIt;
     
     ofPushMatrix(); {
@@ -253,16 +255,21 @@ void ofxSvgText::draw() {
                 
                 if( bHasTexture ) tex->bind();
                 ofMesh& tMeshMesh = mIt->second;
-                vector< ofFloatColor >& tcolors = tMeshMesh.getColors();
-                for( auto& tc : tcolors ) {
-                    if( bOverrideColor ) {
-                        tc = _overrideColor;
-                    } else {
-                        tc.a = alpha;
+                if( bUseShapeColor ) {
+                    vector< ofFloatColor >& tcolors = tMeshMesh.getColors();
+                    for( auto& tc : tcolors ) {
+                        if( bOverrideColor ) {
+                            tc = _overrideColor;
+                        } else {
+                            tc.a = alpha;
+                        }
                     }
+                } else {
+                    tMeshMesh.disableColors();
                 }
                 tMeshMesh.draw();
                 if( bHasTexture ) tex->unbind();
+                tMeshMesh.enableColors();
             }
         }
     } ofPopMatrix();

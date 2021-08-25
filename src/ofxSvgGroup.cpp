@@ -150,6 +150,22 @@ int ofxSvgGroup::getNumChildren() {
     return (int)elements.size();
 }
 
+//--------------------------------------------------------------
+void ofxSvgGroup::disableColors() {
+    auto telements = getAllElements();
+    for( auto& ele : telements ) {
+        ele->setUseShapeColor(false);
+    }
+}
+
+//--------------------------------------------------------------
+void ofxSvgGroup::enableColors() {
+    auto telements = getAllElements();
+    for( auto& ele : telements ) {
+        ele->setUseShapeColor(true);
+    }
+}
+
 
 
 
