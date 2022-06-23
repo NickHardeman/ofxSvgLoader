@@ -123,8 +123,32 @@ void ofxSvgGroup::getElementForNameRecursive( vector< string >& aNamesToFind, sh
             }
         }
     }
-    
-    
+}
+
+//--------------------------------------------------------------
+bool ofxSvgGroup::replace( shared_ptr<ofxSvgBase> aOriginal, shared_ptr<ofxSvgBase> aNew ) {
+    bool bReplaced = false;
+    _replaceElementRecursive( aOriginal, aNew, elements, bReplaced );
+    return bReplaced;
+}
+
+//--------------------------------------------------------------
+void ofxSvgGroup::_replaceElementRecursive( shared_ptr< ofxSvgBase > aTarget, shared_ptr< ofxSvgBase > aNew, vector< shared_ptr<ofxSvgBase> >& aElements, bool& aBSuccessful ) {
+    for( int i = 0; i < aElements.size(); i++ ) {
+        bool bFound = false;
+        if( aTarget == aElements[i] ) {
+            bFound = true;
+            aBSuccessful = true;
+            aElements[i] = aNew;
+            break;
+        }
+        if( !bFound ) {
+            if( aElements[i]->getType() == OFX_SVG_TYPE_GROUP ) {
+                auto tgroup = dynamic_pointer_cast< ofxSvgGroup >( aElements[i] );
+                _replaceElementRecursive(aTarget, aNew, tgroup->elements, aBSuccessful );
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------

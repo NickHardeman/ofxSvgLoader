@@ -115,7 +115,7 @@ void ofxSvgText::create() {
 				string tfontPath = tfont.fontFamily;
 				if (bHasFontDirectory) {
 
-					cout << "ofxSvgBase :: starting off searching directory : " << fontsDirectory << endl;
+					cout << "ofxSvgBase :: " << tfont.fontFamily << " : starting off searching directory : " << fontsDirectory << endl;
 					string tNewFontPath = "";
 					bool bFoundTheFont = _recursiveFontDirSearch(fontsDirectory, tfont.fontFamily, tNewFontPath);
 					if (bFoundTheFont) {

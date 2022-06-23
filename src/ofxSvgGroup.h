@@ -63,6 +63,8 @@ public:
         return stemp;
     }
     
+    bool replace( shared_ptr<ofxSvgBase> aOriginal, shared_ptr<ofxSvgBase> aNew );
+    
     virtual string toString(int nlevel = 0);
     
     int getNumChildren();
@@ -73,6 +75,8 @@ public:
 protected:
     void getElementForNameRecursive( vector< string >& aNamesToFind, shared_ptr< ofxSvgBase >& aTarget, vector< shared_ptr<ofxSvgBase> >& aElements, bool bStrict = false );
     void _getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& aElesToReturn, shared_ptr<ofxSvgBase> aele );
+    
+    void _replaceElementRecursive( shared_ptr< ofxSvgBase > aTarget, shared_ptr< ofxSvgBase > aNew, vector< shared_ptr<ofxSvgBase> >& aElements, bool& aBSuccessful );
     
     vector< shared_ptr<ofxSvgBase> > elements;
 };

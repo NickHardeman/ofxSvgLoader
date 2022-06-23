@@ -18,6 +18,7 @@ public:
         OFX_SVG_TYPE_CIRCLE,
         OFX_SVG_TYPE_PATH,
         OFX_SVG_TYPE_TEXT,
+        OFX_SVG_TYPE_ELEMENT,
         OFX_SVG_TYPE_TOTAL
     };
     
@@ -53,7 +54,7 @@ public:
 class ofxSvgElement : public ofxSvgBase {
 public:
     
-    ofxSvgElement() {scale.set(1,1); rotation = 0.0;}
+    ofxSvgElement() {scale.set(1,1); rotation = 0.0; type=OFX_SVG_TYPE_ELEMENT;}
     
     ofVec2f scale;
     float rotation;
