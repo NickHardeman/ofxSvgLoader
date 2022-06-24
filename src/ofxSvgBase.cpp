@@ -52,6 +52,25 @@ string ofxSvgBase::toString( int nlevel ) {
     return tstr;
 }
 
+//--------------------------------------------------------------
+glm::mat4 ofxSvgBase::getTransformMatrix() {
+    glm::mat4 rmat = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f));
+    return rmat;
+}
+
+//--------------------------------------------------------------
+glm::mat4 ofxSvgElement::getTransformMatrix() {
+    glm::mat4 rmat = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f));
+    if( rotation != 0.0f ) {
+        glm::quat rq = glm::angleAxis(ofDegToRad(rotation), glm::vec3(0.f, 0.f, 1.0f ));
+        rmat = rmat * glm::toMat4((const glm::quat&)rq);
+    }
+    if( scale.x != 1.0f || scale.y != 1.0f ) {
+        rmat = glm::scale(rmat, glm::vec3(scale.x, scale.y, 1.0f));
+    }
+    return rmat;
+};
+
 #pragma mark - ofxSvgText
 
 //--------------------------------------------------------------

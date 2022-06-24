@@ -44,6 +44,8 @@ public:
     
     virtual string toString(int nlevel = 0);
     
+    virtual glm::mat4 getTransformMatrix();
+    
     string name;
     int type;
     bool bVisible;
@@ -56,8 +58,10 @@ public:
     
     ofxSvgElement() {scale.set(1,1); rotation = 0.0; type=OFX_SVG_TYPE_ELEMENT;}
     
-    ofVec2f scale;
-    float rotation;
+    ofVec2f scale = ofVec2f(1.0f, 1.0f);
+    float rotation = 0.0f;
+    
+    virtual glm::mat4 getTransformMatrix() override;
     
     ofPath path;
     
