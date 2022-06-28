@@ -45,6 +45,7 @@ public:
     virtual string toString(int nlevel = 0);
     
     virtual glm::mat4 getTransformMatrix();
+    virtual ofNode getNodeTransform();
     
     string name;
     int type;
@@ -62,6 +63,7 @@ public:
     float rotation = 0.0f;
     
     virtual glm::mat4 getTransformMatrix() override;
+    virtual ofNode getNodeTransform() override;
     
     ofPath path;
     

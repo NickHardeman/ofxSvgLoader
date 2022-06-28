@@ -59,6 +59,13 @@ glm::mat4 ofxSvgBase::getTransformMatrix() {
 }
 
 //--------------------------------------------------------------
+ofNode ofxSvgBase::getNodeTransform() {
+    ofNode tnode;
+    tnode.setPosition( pos.x, pos.y, 0.0f );
+    return tnode;
+}
+
+//--------------------------------------------------------------
 glm::mat4 ofxSvgElement::getTransformMatrix() {
     glm::mat4 rmat = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f));
     if( rotation != 0.0f ) {
@@ -70,6 +77,20 @@ glm::mat4 ofxSvgElement::getTransformMatrix() {
     }
     return rmat;
 };
+
+//--------------------------------------------------------------
+ofNode ofxSvgElement::getNodeTransform() {
+    ofNode tnode = ofxSvgBase::getNodeTransform();
+    if( rotation != 0.0f ) {
+        glm::quat rq = glm::angleAxis(ofDegToRad(rotation), glm::vec3(0.f, 0.f, 1.0f ));
+        tnode.setOrientation(rq);
+    }
+    tnode.setScale(1.0f);
+    if( scale.x != 1.0f || scale.y != 1.0f ) {
+        tnode.setScale(scale.x, scale.y, 1.f );
+    }
+    return tnode;
+}
 
 #pragma mark - ofxSvgText
 
