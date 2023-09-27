@@ -150,7 +150,6 @@ void ofxSvgLoader::validateXmlSvgRoot( ofXml& aRootSvgNode ) {
 		if (restore_to_viewbox) {
 			ofXml::Attribute viewBoxAttr = aRootSvgNode.getAttribute("viewBox");
 			if( viewBoxAttr ) {
-				ofLogNotice("XXX") << ofStringEndsWith(wattr.getValue(),"%");
 				string tboxstr = viewBoxAttr.getValue();
 				vector<string> tvals = ofSplitString(tboxstr, " ");
 				
