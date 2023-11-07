@@ -9,6 +9,11 @@ extern "C"{
 #include "svgtiny.h"
 }
 
+using std::string;
+using std::vector;
+using std::make_shared;
+using std::shared_ptr;
+
 //--------------------------------------------------------------
 ofxSvgLoader::ofxSvgLoader() {
     svgPath     = "";
@@ -342,7 +347,7 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
             getTransformFromSvgMatrix( transAttr.getValue(), telement->pos, telement->scale.x, telement->scale.y, telement->rotation );
         }
         if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_IMAGE ) {
-            shared_ptr< ofxSvgImage > timg = dynamic_pointer_cast<ofxSvgImage>( telement );
+            shared_ptr< ofxSvgImage > timg = std::dynamic_pointer_cast<ofxSvgImage>( telement );
             timg->rectangle.x = timg->pos.x;
             timg->rectangle.y = timg->pos.y;
         }

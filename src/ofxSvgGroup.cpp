@@ -6,6 +6,10 @@
 
 #include "ofxSvgGroup.h"
 
+using std::vector;
+using std::shared_ptr;
+using std::string;
+
 //--------------------------------------------------------------
 void ofxSvgGroup::draw() {
     int numElements = elements.size();

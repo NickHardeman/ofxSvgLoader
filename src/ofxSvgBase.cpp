@@ -6,6 +6,12 @@
 
 #include "ofxSvgBase.h"
 
+using std::map;
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
+
 map< string, ofxSvgText::Font > ofxSvgText::fonts;
 ofTrueTypeFont ofxSvgText::defaultFont;
 

@@ -25,9 +25,9 @@ public:
     ofxSvgBase() { name = "No Name"; type = OFX_SVG_TYPE_TOTAL; setVisible( true ); }
     
     int getType() {return type;}
-    string getTypeAsString();
+    std::string getTypeAsString();
     
-    string getName() { return name; }
+	std::string getName() { return name; }
     virtual int getNumChildren() { return 0; }
     bool isGroup() {
         return (getType() == OFX_SVG_TYPE_GROUP);
@@ -42,12 +42,12 @@ public:
     
     virtual void draw() {}
     
-    virtual string toString(int nlevel = 0);
+    virtual std::string toString(int nlevel = 0);
     
     virtual glm::mat4 getTransformMatrix();
     virtual ofNode getNodeTransform();
     
-    string name;
+	std::string name;
     int type;
     bool bVisible;
     ofVec2f pos;
@@ -118,7 +118,7 @@ public:
         }
     }
     
-    string getFilePath() { return filepath; }
+	std::string getFilePath() { return filepath; }
     
     void setColor( ofColor aColor ) {
         color = aColor;
@@ -130,7 +130,7 @@ public:
     ofColor color;
     ofImage img;
     bool bTryLoad = false;
-    string filepath;
+	std::string filepath;
 };
 
 class ofxSvgCircle : public ofxSvgElement {
@@ -160,12 +160,12 @@ public:
     
     class Font {
     public:
-        string fontFamily;
-        map< int, ofTrueTypeFont > sizes;
-        map< int, ofTexture > textures;
+		std::string fontFamily;
+		std::map< int, ofTrueTypeFont > sizes;
+		std::map< int, ofTexture > textures;
     };
     
-    static map< string, Font > fonts;
+    static std::map< std::string, Font > fonts;
     
     class TextSpan {
     public:
@@ -175,9 +175,9 @@ public:
             lineHeight = 0;
         }
         
-        string text;
+		std::string text;
         int fontSize = 12;
-        string fontFamily;
+		std::string fontFamily;
         ofRectangle rect;
         ofColor color;
         float lineHeight = 12;
@@ -197,7 +197,7 @@ public:
     void create();
     void draw();
     
-    void setFontDirectory( string aPath ) {
+    void setFontDirectory( std::string aPath ) {
         fdirectory = aPath;
 //		cout << "Setting the font directory to " << fdirectory << endl;
     }
@@ -209,17 +209,17 @@ public:
     
     ofRectangle getRectangle();
     
-    map< string, map<int, ofMesh> > meshes;
-    vector< TextSpan > textSpans;
+	std::map< std::string, std::map<int, ofMesh> > meshes;
+	std::vector< TextSpan > textSpans;
     
-    string fdirectory;
+	std::string fdirectory;
     bool bCentered = false;
     float alpha = 1.;
     ofVec2f ogPos;
     
 protected:
     static ofTrueTypeFont defaultFont;
-	bool _recursiveFontDirSearch(string afile, string aFontFamToLookFor, string& fontpath);
+	bool _recursiveFontDirSearch(std::string afile, std::string aFontFamToLookFor, std::string& fontpath);
     ofFloatColor _overrideColor;
     bool bOverrideColor;
 };
