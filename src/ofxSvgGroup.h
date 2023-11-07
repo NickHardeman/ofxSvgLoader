@@ -13,25 +13,25 @@ public:
     
     virtual void draw();
     
-    vector< shared_ptr<ofxSvgBase> >& getElements();
-    vector< shared_ptr<ofxSvgBase> > getAllElements();
+	std::vector< std::shared_ptr<ofxSvgBase> >& getElements();
+	std::vector< std::shared_ptr<ofxSvgBase> > getAllElements();
     
     template<typename ofxSvgType>
-    vector< shared_ptr<ofxSvgType> > getElementsForType( string aPathToGroup="", bool bStrict= false ) {
+	std::vector< std::shared_ptr<ofxSvgType> > getElementsForType( std::string aPathToGroup="", bool bStrict= false ) {
         
-        shared_ptr< ofxSvgType > temp( new ofxSvgType() );
+		std::shared_ptr< ofxSvgType > temp( new ofxSvgType() );
         int sType = temp->getType();
         
-        vector< shared_ptr<ofxSvgType> > telements;
+		std::vector< std::shared_ptr<ofxSvgType> > telements;
         
-        vector< shared_ptr<ofxSvgBase> > elementsToSearch;
+		std::vector< std::shared_ptr<ofxSvgBase> > elementsToSearch;
         if( aPathToGroup == "" ) {
             elementsToSearch = elements;
         } else {
-            shared_ptr< ofxSvgBase > temp = getElementForName( aPathToGroup, bStrict );
+			std::shared_ptr< ofxSvgBase > temp = getElementForName( aPathToGroup, bStrict );
             if( temp ) {
                 if( temp->isGroup() ) {
-                    shared_ptr< ofxSvgGroup > tgroup = dynamic_pointer_cast< ofxSvgGroup>( temp );
+					std::shared_ptr< ofxSvgGroup > tgroup = std::dynamic_pointer_cast< ofxSvgGroup>( temp );
                     elementsToSearch = tgroup->elements;
                 }
             }
@@ -43,29 +43,29 @@ public:
         
         for( int i = 0; i < elementsToSearch.size(); i++ ) {
             if( elementsToSearch[i]->getType() == sType ) {
-                telements.push_back( dynamic_pointer_cast< ofxSvgType>(elementsToSearch[i]) );
+                telements.push_back( std::dynamic_pointer_cast< ofxSvgType>(elementsToSearch[i]) );
             }
         }
         return telements;
     }
     
-    shared_ptr< ofxSvgBase > getElementForName( string aPath, bool bStrict = false );
+	std::shared_ptr< ofxSvgBase > getElementForName( std::string aPath, bool bStrict = false );
     
     template<typename ofxSvgType>
-    shared_ptr< ofxSvgType > get( string aPath, bool bStrict = false ) {
-        shared_ptr< ofxSvgType > stemp = dynamic_pointer_cast< ofxSvgType >( getElementForName( aPath, bStrict ) );
+	std::shared_ptr< ofxSvgType > get( std::string aPath, bool bStrict = false ) {
+		std::shared_ptr< ofxSvgType > stemp = std::dynamic_pointer_cast< ofxSvgType >( getElementForName( aPath, bStrict ) );
         return stemp;
     }
     
     template<typename ofxSvgType>
-    shared_ptr< ofxSvgType > get( int aIndex, bool bStrict = false ) {
-        shared_ptr< ofxSvgType > stemp = dynamic_pointer_cast< ofxSvgType >( elements[ aIndex ] );
+	std::shared_ptr< ofxSvgType > get( int aIndex, bool bStrict = false ) {
+		std::shared_ptr< ofxSvgType > stemp = std::dynamic_pointer_cast< ofxSvgType >( elements[ aIndex ] );
         return stemp;
     }
     
-    bool replace( shared_ptr<ofxSvgBase> aOriginal, shared_ptr<ofxSvgBase> aNew );
+    bool replace( std::shared_ptr<ofxSvgBase> aOriginal, std::shared_ptr<ofxSvgBase> aNew );
     
-    virtual string toString(int nlevel = 0);
+    virtual std::string toString(int nlevel = 0);
     
     int getNumChildren();
     
@@ -73,12 +73,12 @@ public:
     void enableColors();
     
 protected:
-    void getElementForNameRecursive( vector< string >& aNamesToFind, shared_ptr< ofxSvgBase >& aTarget, vector< shared_ptr<ofxSvgBase> >& aElements, bool bStrict = false );
-    void _getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& aElesToReturn, shared_ptr<ofxSvgBase> aele );
+    void getElementForNameRecursive( std::vector< std::string >& aNamesToFind, std::shared_ptr< ofxSvgBase >& aTarget, std::vector< std::shared_ptr<ofxSvgBase> >& aElements, bool bStrict = false );
+    void _getAllElementsRecursive( std::vector< std::shared_ptr< ofxSvgBase > >& aElesToReturn, std::shared_ptr<ofxSvgBase> aele );
     
-    void _replaceElementRecursive( shared_ptr< ofxSvgBase > aTarget, shared_ptr< ofxSvgBase > aNew, vector< shared_ptr<ofxSvgBase> >& aElements, bool& aBSuccessful );
+    void _replaceElementRecursive( std::shared_ptr< ofxSvgBase > aTarget, std::shared_ptr< ofxSvgBase > aNew, std::vector< std::shared_ptr<ofxSvgBase> >& aElements, bool& aBSuccessful );
     
-    vector< shared_ptr<ofxSvgBase> > elements;
+	std::vector< std::shared_ptr<ofxSvgBase> > elements;
 };
 
 
