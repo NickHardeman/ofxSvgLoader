@@ -5,6 +5,7 @@
 //
 
 #include "ofxSvgBase.h"
+#include "ofGraphics.h"
 
 using std::map;
 using std::string;
@@ -98,8 +99,29 @@ ofNode ofxSvgElement::getNodeTransform() {
     return tnode;
 }
 
-#pragma mark - ofxSvgText
+#pragma mark - ofxSvgImage
+//--------------------------------------------------------------
+void ofxSvgImage::draw() {
+	if( !bTryLoad ) {
+		img.load( getFilePath() );
+		bTryLoad = true;
+	}
+	
+	if( isVisible() ) {
+		if( img.isAllocated() ) {
+			ofPushMatrix(); {
+				ofTranslate( pos.x, pos.y );
+				if( rotation != 0.0 ) ofRotateZDeg( rotation );
+				ofScale( scale.x, scale.y );
+				if(bUseShapeColor) ofSetColor( getColor() );
+				img.draw( 0, 0 );
+			} ofPopMatrix();
+		}
+	}
+}
 
+
+#pragma mark - ofxSvgText
 //--------------------------------------------------------------
 void ofxSvgText::create() {
     meshes.clear();
@@ -108,7 +130,7 @@ void ofxSvgText::create() {
     vector< TextSpan > tspans = textSpans;
     
     map< string, map< int, vector<TextSpan> > > tspanFonts;
-    for( int i = 0; i < tspans.size(); i++ ) {
+    for( size_t i = 0; i < tspans.size(); i++ ) {
         if( tspanFonts.count( tspans[i].fontFamily ) == 0 ) {
             map< int, vector<TextSpan> > tmapap;
             tspanFonts[ tspans[i].fontFamily ] = tmapap;
@@ -214,7 +236,7 @@ void ofxSvgText::create() {
             }
             
             ofTrueTypeFont& ttfont = tfont.sizes[ vIt->first ];
-            for( int i = 0; i < spanSpans.size(); i++ ) {
+            for( size_t i = 0; i < spanSpans.size(); i++ ) {
                 // create a mesh here //
                 TextSpan& cspan = spanSpans[i];
                 if( cspan.text == "" ) continue;
@@ -229,7 +251,7 @@ void ofxSvgText::create() {
                 int offsetIndex     = tmesh.getNumVertices();
                 
                 vector<ofIndexType> tsIndices = stringMesh.getIndices();
-                for( int k = 0; k < tsIndices.size(); k++ ) {
+                for( size_t k = 0; k < tsIndices.size(); k++ ) {
                     tsIndices[k] = tsIndices[k] + offsetIndex;
                 }
                 
@@ -246,7 +268,7 @@ void ofxSvgText::create() {
     }
     
     // now loop through and set the width and height of the text spans //
-    for( int i = 0; i < textSpans.size(); i++ ) {
+    for( size_t i = 0; i < textSpans.size(); i++ ) {
         TextSpan& tempSpan = textSpans[i];
         ofTrueTypeFont& tfont = tempSpan.getFont();
         if( tfont.isLoaded() ) {
@@ -332,7 +354,7 @@ bool ofxSvgText::_recursiveFontDirSearch(string afile, string aFontFamToLookFor,
 		cout << "ofxSvgText :: searching in directory : " << afile << " | " << ofGetFrameNum() << endl;
 		ofDirectory tdir;
 		tdir.listDir(afile);
-		for (int i = 0; i < tdir.size(); i++) {
+		for (size_t i = 0; i < tdir.size(); i++) {
 			bool youGoodOrWhat = _recursiveFontDirSearch(tdir.getPath(i), aFontFamToLookFor, fontpath);
             if( youGoodOrWhat ) {
                 return true;
@@ -376,7 +398,7 @@ ofTrueTypeFont& ofxSvgText::TextSpan::getFont() {
 //--------------------------------------------------------------
 ofRectangle ofxSvgText::getRectangle() {
     ofRectangle temp( 0, 0, 1, 1 );
-    for( int i = 0; i < textSpans.size(); i++ ) {
+    for( size_t i = 0; i < textSpans.size(); i++ ) {
         ofRectangle trect = textSpans[i].rect;
         trect.x = trect.x;// - ogPos.x;
         trect.y = trect.y;// - ogPos.y;

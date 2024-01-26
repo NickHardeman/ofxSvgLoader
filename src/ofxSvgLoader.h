@@ -5,8 +5,8 @@
 //
 
 #pragma once
-#include "ofMain.h"
 #include "ofxSvgGroup.h"
+#include "ofXml.h"
 
 class ofxSvgLoader : public ofxSvgGroup {
 public:

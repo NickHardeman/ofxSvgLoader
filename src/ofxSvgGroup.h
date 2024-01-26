@@ -19,7 +19,8 @@ public:
     template<typename ofxSvgType>
 	std::vector< std::shared_ptr<ofxSvgType> > getElementsForType( std::string aPathToGroup="", bool bStrict= false ) {
         
-		std::shared_ptr< ofxSvgType > temp( new ofxSvgType() );
+//		std::shared_ptr< ofxSvgType > temp( new ofxSvgType() );
+		std::shared_ptr<ofxSvgType> temp = std::make_shared<ofxSvgType>();
         int sType = temp->getType();
         
 		std::vector< std::shared_ptr<ofxSvgType> > telements;
@@ -41,13 +42,31 @@ public:
             elementsToSearch = elements;
         }
         
-        for( int i = 0; i < elementsToSearch.size(); i++ ) {
+        for( size_t i = 0; i < elementsToSearch.size(); i++ ) {
             if( elementsToSearch[i]->getType() == sType ) {
                 telements.push_back( std::dynamic_pointer_cast< ofxSvgType>(elementsToSearch[i]) );
             }
         }
         return telements;
     }
+	
+	template<typename ofxSvgType>
+	std::vector< std::shared_ptr<ofxSvgType> > getAllElementsForType() {
+		
+		std::shared_ptr<ofxSvgType> temp = std::make_shared<ofxSvgType>();
+		int sType = temp->getType();
+		
+		std::vector< std::shared_ptr<ofxSvgType> > telements;
+		
+		auto elementsToSearch = getAllElements();
+		
+		for( size_t i = 0; i < elementsToSearch.size(); i++ ) {
+			if( elementsToSearch[i]->getType() == sType ) {
+				telements.push_back( std::dynamic_pointer_cast<ofxSvgType>(elementsToSearch[i]) );
+			}
+		}
+		return telements;
+	}
     
 	std::shared_ptr< ofxSvgBase > getElementForName( std::string aPath, bool bStrict = false );
     

@@ -5,6 +5,7 @@
 //
 
 #include "ofxSvgGroup.h"
+#include "ofGraphics.h"
 
 using std::vector;
 using std::shared_ptr;
@@ -48,7 +49,7 @@ void ofxSvgGroup::_getAllElementsRecursive( vector< shared_ptr< ofxSvgBase > >& 
     
     if( aele ) {
         if( aele->isGroup() ) {
-            shared_ptr< ofxSvgGroup > tgroup = dynamic_pointer_cast< ofxSvgGroup >(aele);
+            shared_ptr< ofxSvgGroup > tgroup = std::dynamic_pointer_cast< ofxSvgGroup >(aele);
             for( auto ele : tgroup->getElements() ) {
                 _getAllElementsRecursive( aElesToReturn, ele );
             }
@@ -94,7 +95,7 @@ void ofxSvgGroup::getElementForNameRecursive( vector< string >& aNamesToFind, sh
                 if (aElements[i]->getName() == "No Name") {
                     // the ids for text block in illustrator are weird,
                     // so try to grab the name from the text contents //
-                    shared_ptr<ofxSvgText> etext = dynamic_pointer_cast<ofxSvgText>(aElements[i]);
+                    shared_ptr<ofxSvgText> etext = std::dynamic_pointer_cast<ofxSvgText>(aElements[i]);
                     if (etext) {
                         if (etext->textSpans.size()) {
 //                            cout << "Searching for " << aNamesToFind[0] << " in " << etext->textSpans.front().text << endl;
@@ -120,7 +121,7 @@ void ofxSvgGroup::getElementForNameRecursive( vector< string >& aNamesToFind, sh
                 break;
             } else {
                 if( aElements[i]->getType() == OFX_SVG_TYPE_GROUP ) {
-                    shared_ptr< ofxSvgGroup > tgroup = dynamic_pointer_cast< ofxSvgGroup >( aElements[i] );
+                    shared_ptr< ofxSvgGroup > tgroup = std::dynamic_pointer_cast< ofxSvgGroup >( aElements[i] );
                     getElementForNameRecursive( aNamesToFind, aTarget, tgroup->elements, bStrict );
                     break;
                 }
@@ -148,7 +149,7 @@ void ofxSvgGroup::_replaceElementRecursive( shared_ptr< ofxSvgBase > aTarget, sh
         }
         if( !bFound ) {
             if( aElements[i]->getType() == OFX_SVG_TYPE_GROUP ) {
-                auto tgroup = dynamic_pointer_cast< ofxSvgGroup >( aElements[i] );
+                auto tgroup = std::dynamic_pointer_cast< ofxSvgGroup >( aElements[i] );
                 _replaceElementRecursive(aTarget, aNew, tgroup->elements, aBSuccessful );
             }
         }

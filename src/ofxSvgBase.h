@@ -5,8 +5,11 @@
 //
 
 #pragma once
-#include "ofMain.h"
+#include "ofNode.h"
+#include "ofImage.h"
+#include "ofPath.h"
 #include <map>
+#include "ofTrueTypeFont.h"
 
 class ofxSvgBase {
 public:
@@ -47,9 +50,9 @@ public:
     virtual glm::mat4 getTransformMatrix();
     virtual ofNode getNodeTransform();
     
-	std::string name;
-    int type;
-    bool bVisible;
+	std::string name = "";
+    int type=0;
+    bool bVisible=true;
     ofVec2f pos;
     bool bUseShapeColor = true;
 };
@@ -99,24 +102,7 @@ class ofxSvgImage : public ofxSvgRectangle {
 public:
     ofxSvgImage() { type = OFX_SVG_TYPE_IMAGE; bTryLoad = false; }
     
-    virtual void draw() {
-        if( !bTryLoad ) {
-            img.load( getFilePath() );
-            bTryLoad = true;
-        }
-        
-        if( isVisible() ) {
-            if( img.isAllocated() ) {
-                ofPushMatrix(); {
-                    ofTranslate( pos.x, pos.y );
-                    if( rotation != 0.0 ) ofRotateZDeg( rotation );
-                    ofScale( scale.x, scale.y );
-                    if(bUseShapeColor) ofSetColor( getColor() );
-                    img.draw( 0, 0 );
-                } ofPopMatrix();
-            }
-        }
-    }
+	virtual void draw();
     
 	std::string getFilePath() { return filepath; }
     

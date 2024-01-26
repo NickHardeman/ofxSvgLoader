@@ -38,8 +38,6 @@ bool ofxSvgLoader::load( string aPathToSvg ) {
     
     
     if( xml ) {
-//        Poco::XML::Element *svgNode     = document->documentElement();
-//        Poco::XML::Attr* viewBoxNode = svgNode->getAttributeNode("viewbox");
         
         ofXml svgNode = xml.getFirstChild();
         
@@ -145,14 +143,18 @@ void ofxSvgLoader::validateXmlSvgRoot( ofXml& aRootSvgNode ) {
 		auto wattr = aRootSvgNode.getAttribute("width");
 		auto hattr = aRootSvgNode.getAttribute("height");
 		
-		std::optional<glm::vec2> restore_to_viewbox;
+		//std::optional<glm::vec2> restore_to_viewbox;
+		bool bRestoreToViewbox = false;
+		glm::vec2 restore_to_viewbox = {1.f, 1.f};
 		if( !wattr || !hattr ) {
+			bRestoreToViewbox = true;
 			restore_to_viewbox = { 1.0f, 1.0f }; // missing width/height — apply viewbox at 100%
 		} else if (ofStringEndsWith(wattr.getValue(),"%") || ofStringEndsWith(wattr.getValue(),"%")) {
+			bRestoreToViewbox = true;
 			restore_to_viewbox = { wattr.getFloatValue()/100.0, hattr.getFloatValue()/100.0 };
 		}
 		
-		if (restore_to_viewbox) {
+		if (bRestoreToViewbox) {
 			ofXml::Attribute viewBoxAttr = aRootSvgNode.getAttribute("viewBox");
 			if( viewBoxAttr ) {
 				string tboxstr = viewBoxAttr.getValue();
@@ -161,10 +163,10 @@ void ofxSvgLoader::validateXmlSvgRoot( ofXml& aRootSvgNode ) {
 				if (tvals.size() >= 4) {
 					
 					if (!wattr) wattr = aRootSvgNode.appendAttribute("width");
-					if (wattr) wattr.set(ofToString(ofToFloat(tvals[2]) * restore_to_viewbox.value().x) + "px");
+					if (wattr) wattr.set(ofToString(ofToFloat(tvals[2]) * restore_to_viewbox.x) + "px");
 					
 					if (!hattr) hattr = aRootSvgNode.appendAttribute("height");
-					if (hattr) hattr.set(ofToString(ofToFloat(tvals[3]) * restore_to_viewbox.value().y) + "px");
+					if (hattr) hattr.set(ofToString(ofToFloat(tvals[3]) * restore_to_viewbox.y) + "px");
 				}
 			} else {
 				ofLogError("ofxSvgLoader::validateXmlSvgRoot") << "strangely-formed SVG without absolute width/height nor viewbox";
@@ -354,7 +356,7 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
     }
     
     if( telement->getType() == ofxSvgBase::OFX_SVG_TYPE_TEXT ) {
-        shared_ptr< ofxSvgText > text = dynamic_pointer_cast< ofxSvgText>( telement );
+        shared_ptr< ofxSvgText > text = std::dynamic_pointer_cast< ofxSvgText>( telement );
         text->ogPos = text->pos;
         text->create();
     }
