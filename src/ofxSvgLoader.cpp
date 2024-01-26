@@ -601,3 +601,13 @@ const ofRectangle ofxSvgLoader::getBounds(){
 const ofRectangle ofxSvgLoader::getViewbox(){
 	return viewbox;
 }
+
+//--------------------------------------------------------------
+float ofxSvgLoader::getWidth() {
+	return viewbox.getWidth();
+}
+
+//--------------------------------------------------------------
+float ofxSvgLoader::getHeight() {
+	return viewbox.getHeight();
+}

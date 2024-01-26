@@ -24,6 +24,9 @@ public:
 	const ofRectangle getBounds();
 	const ofRectangle getViewbox();
 	
+	float getWidth();
+	float getHeight();
+	
 protected:
 	std::string fontsDirectory;
 	std::string folderPath, svgPath;
