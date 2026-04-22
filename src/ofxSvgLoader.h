@@ -16,6 +16,7 @@ public:
     bool reload();
     
     void setFontsDirectory( std::string aDir );
+    void setPreferInkscapeLabels( const bool aPreferInkscapeLabels );
     
     virtual std::string toString(int nlevel = 0);
     
@@ -32,6 +33,7 @@ protected:
 	std::string folderPath, svgPath;
     ofRectangle viewbox;
     ofRectangle bounds;
+    bool preferInkscapeLabels = false;
     void validateXmlSvgRoot( ofXml& aRootSvgNode );
 	std::string cleanString( std::string aStr, std::string aReplace );
     void parseXmlNode( ofXml& aRootNode, ofXml& aParentNode, std::vector< std::shared_ptr<ofxSvgBase> >& aElements );
