@@ -103,6 +103,11 @@ void ofxSvgLoader::setFontsDirectory( string aDir ) {
 }
 
 //--------------------------------------------------------------
+void ofxSvgLoader::setPreferInkscapeLabels( const bool aPreferInkscapeLabels ) {
+    preferInkscapeLabels = aPreferInkscapeLabels;
+}
+
+//--------------------------------------------------------------
 string ofxSvgLoader::toString(int nlevel) {
     
     string tstr = "";
@@ -193,6 +198,12 @@ void ofxSvgLoader::parseXmlNode( ofXml& aRootNode, ofXml& aParentNode, vector< s
                 auto idattr = kid.getAttribute("id");
                 if( idattr ) {
                     tgroup->name = idattr.getValue();
+                }
+                if(preferInkscapeLabels){
+                    auto inkscapeLabelAttr = kid.getAttribute("inkscape:label");
+                    if( inkscapeLabelAttr ) {
+                        tgroup->name = inkscapeLabelAttr.getValue();
+                    }
                 }
                 aElements.push_back( tgroup );
                 parseXmlNode( aRootNode, kid, tgroup->getElements() );
@@ -364,6 +375,12 @@ bool ofxSvgLoader::addElementFromXmlNode( ofXml& aRootNode, ofXml& tnode, vector
     auto idAttr = tnode.getAttribute("id");
     if( idAttr ) {
         telement->name = idAttr.getValue();
+    }
+    if(preferInkscapeLabels){
+        auto inkscapeLabelAttr = tnode.getAttribute("inkscape:label");
+        if( inkscapeLabelAttr ) {
+            telement->name = inkscapeLabelAttr.getValue();
+        }
     }
     
     auto disAttr = tnode.getAttribute("display");
